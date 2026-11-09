@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "declaration": false,
+    "declarationMap": false,
+    "noUncheckedIndexedAccess": false,
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src",
+    "test",
+    "prisma",
+    "scripts",
+    "prisma.config.ts"
+  ],
+  "exclude": [
+    "test/mobile-sync.test.ts"
+  ]
+}

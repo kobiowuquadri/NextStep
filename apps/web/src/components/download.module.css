@@ -1,0 +1,42 @@
+.note {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 22px;
+  padding: 14px 18px;
+  border-radius: var(--ns-radius-md);
+  background: var(--ns-surface);
+  border: 2px dashed var(--ns-border-strong);
+  color: var(--ns-text-secondary);
+  max-width: 560px;
+  font-size: 0.98rem;
+}
+.note svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--ns-calm-text);
+}
+.note strong {
+  color: var(--ns-text-primary);
+}
+.links {
+  list-style: none;
+  padding: 0;
+  margin: 22px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 20px;
+  border-radius: var(--ns-radius-pill);
+  border: 2px solid var(--ns-border-strong);
+  background: var(--ns-surface-inverse);
+  color: var(--ns-text-inverse);
+  font-weight: 800;
+  text-decoration: none;
+}

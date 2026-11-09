@@ -1,0 +1,100 @@
+.cycler {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  width: 100%;
+}
+.phone {
+  width: 100%;
+}
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: translate3d(0, 14px, 0) scale(1.03);
+  transition:
+    opacity 620ms ease,
+    transform 760ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.on {
+  opacity: 1;
+  transform: none;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 460px;
+}
+.tabs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+.tab {
+  position: relative;
+  overflow: hidden;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--ns-radius-pill);
+  border: 2px solid var(--ns-border-strong);
+  background: var(--ns-surface);
+  color: var(--ns-text-primary);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background var(--ns-motion-fast) ease,
+    transform var(--ns-motion-fast) ease;
+}
+.tab:hover {
+  transform: translateY(-1px);
+}
+.tab[aria-pressed='true'] {
+  background: var(--ns-primary);
+  color: var(--ns-text-on-primary);
+}
+.progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--ns-reward);
+  transform-origin: left;
+  animation: grow var(--interval) linear both;
+}
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--ns-border-strong);
+  background: var(--ns-surface);
+  color: var(--ns-text-primary);
+  cursor: pointer;
+}
+@media (prefers-reduced-motion: reduce) {
+  .layer {
+    transition: none;
+  }
+}

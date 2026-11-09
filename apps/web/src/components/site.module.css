@@ -1,0 +1,201 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--ns-canvas) 90%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--ns-border);
+}
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 72px;
+}
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  min-height: 48px;
+}
+.logoMark {
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+}
+.wordmark {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  font-size: 1.45rem;
+  letter-spacing: -0.03em;
+}
+.desktopNav {
+  display: none;
+}
+.desktopNav ul {
+  list-style: none;
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+}
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: var(--ns-radius-pill);
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--ns-text-secondary);
+}
+.navLink:hover,
+.navLink[aria-current='page'] {
+  color: var(--ns-text-primary);
+  background: var(--ns-primary-soft);
+}
+.headerCta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.demoBtn {
+  display: none;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 20px;
+  border-radius: var(--ns-radius-pill);
+  border: 2px solid var(--ns-border-strong);
+  background: var(--ns-primary);
+  color: var(--ns-text-on-primary);
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 3px 0 0 var(--ns-tactile-shadow);
+}
+.demoBtn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 var(--ns-tactile-shadow);
+}
+.menuBtn {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  border: 2px solid var(--ns-border-strong);
+  background: var(--ns-surface);
+  color: var(--ns-text-primary);
+  cursor: pointer;
+}
+.mobileNav {
+  border-top: 1px solid var(--ns-border);
+  background: var(--ns-canvas);
+}
+.mobileNav ul {
+  list-style: none;
+  margin: 0;
+  padding-top: 8px;
+  padding-bottom: 16px;
+  display: grid;
+}
+.mobileNav a {
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  border-bottom: 1px solid var(--ns-border);
+}
+.mobileNav a[aria-current='page'] {
+  color: var(--ns-primary);
+}
+@media (min-width: 1000px) {
+  .desktopNav {
+    display: block;
+  }
+  .menuBtn,
+  .mobileNav {
+    display: none !important;
+  }
+}
+@media (min-width: 560px) {
+  .demoBtn {
+    display: inline-flex;
+  }
+}
+
+.footer {
+  background: var(--ns-surface-subtle);
+  border-top: 2px solid var(--ns-border-strong);
+  padding: 56px 0 40px;
+}
+.footerInner {
+  display: grid;
+  gap: 36px;
+}
+@media (min-width: 900px) {
+  .footerInner {
+    grid-template-columns: 1.3fr 1fr 1fr;
+  }
+}
+.footerBrand {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+.footerBrand > p:first-of-type {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+.footerSmall {
+  font-size: 0.92rem;
+  color: var(--ns-text-muted);
+}
+.footerLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 20px;
+}
+.footerLinks a {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  font-weight: 600;
+  color: var(--ns-text-secondary);
+}
+.footerMeta {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+.themeToggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--ns-radius-pill);
+  border: 2px solid var(--ns-border-strong);
+  background: var(--ns-surface);
+  width: max-content;
+}
+.themeToggle button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 40px;
+  border-radius: var(--ns-radius-pill);
+  border: 0;
+  background: transparent;
+  color: var(--ns-text-secondary);
+  cursor: pointer;
+}
+.themeToggle button[aria-checked='true'] {
+  background: var(--ns-primary);
+  color: var(--ns-text-on-primary);
+}

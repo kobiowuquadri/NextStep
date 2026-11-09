@@ -1,0 +1,29 @@
+{
+  "name": "nextstep",
+  "private": true,
+  "description": "NextStep by Team Apex — Plans change. Keep moving.",
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@11.1.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "build:packages": "pnpm -r --filter \"./packages/*\" run build",
+    "build": "pnpm build:packages && pnpm --filter @nextstep/api build && pnpm --filter @nextstep/web build",
+    "build:web": "pnpm build:packages && pnpm --filter @nextstep/web build",
+    "build:api": "pnpm --filter \"@nextstep/api^...\" run build && pnpm --filter @nextstep/api build",
+    "test": "pnpm build:packages && pnpm -r --filter \"./packages/*\" run test && pnpm --filter @nextstep/api test",
+    "test:packages": "pnpm -r --filter \"./packages/*\" run test",
+    "test:api": "pnpm --filter @nextstep/api test",
+    "test:web": "pnpm --filter @nextstep/web test:e2e",
+    "typecheck": "pnpm -r run typecheck",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "db:migrate": "pnpm --filter @nextstep/api prisma:migrate",
+    "db:seed": "pnpm --filter @nextstep/api db:seed",
+    "dev:api": "pnpm --filter @nextstep/api dev",
+    "dev:web": "pnpm --filter @nextstep/web dev",
+    "dev:mobile": "pnpm --filter @nextstep/mobile start",
+    "check:secrets": "node scripts/check-client-secrets.mjs"
+  }
+}

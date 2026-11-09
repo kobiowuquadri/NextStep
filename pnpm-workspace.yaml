@@ -1,0 +1,15 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# React Native / Expo tooling expects a flat node_modules layout.
+nodeLinker: hoisted
+
+# pnpm blocks dependency install scripts by default; allow only the ones that need them.
+allowBuilds:
+  "@embedded-postgres/windows-x64": true
+  "@embedded-postgres/linux-x64": true
+  "@embedded-postgres/darwin-arm64": true
+  "@prisma/engines": true
+  prisma: true
+  esbuild: true

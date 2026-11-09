@@ -1,0 +1,285 @@
+/* Tactile button: solid ink offset shadow, pressed state sinks into it. */
+.btn {
+  --shadow: var(--ns-tactile-shadow);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: var(--ns-radius-pill);
+  border: 2px solid var(--ns-border-strong);
+  font: inherit;
+  font-weight: 800;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--shadow);
+  transform: translateY(0);
+  transition: transform var(--ns-motion-fast) ease, box-shadow var(--ns-motion-fast) ease, background var(--ns-motion-fast) ease;
+  white-space: nowrap;
+}
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 0 var(--shadow);
+}
+.btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--shadow);
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+.lg {
+  min-height: 60px;
+  padding: 0 30px;
+  font-size: 1.08rem;
+}
+.sm {
+  min-height: 44px;
+  padding: 0 16px;
+  font-size: 0.92rem;
+}
+.primary {
+  background: var(--ns-primary);
+  color: var(--ns-text-on-primary);
+}
+.secondary {
+  background: var(--ns-surface);
+  color: var(--ns-text-primary);
+}
+.energy {
+  background: var(--ns-energy);
+  color: var(--ns-text-on-accent);
+}
+.ghost {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--ns-primary-soft-text);
+  padding: 0 12px;
+}
+.ghost:hover,
+.ghost:active {
+  box-shadow: none;
+  transform: none;
+  background: var(--ns-primary-soft);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: var(--ns-radius-pill);
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.eyebrow_energy {
+  background: var(--ns-energy-soft);
+  color: var(--ns-energy-text);
+}
+.eyebrow_primary {
+  background: var(--ns-primary-soft);
+  color: var(--ns-primary-soft-text);
+}
+.eyebrow_calm {
+  background: var(--ns-calm-soft);
+  color: var(--ns-calm-text);
+}
+.eyebrow_reward {
+  background: var(--ns-reward-soft);
+  color: var(--ns-reward-text);
+}
+
+.section {
+  padding: 72px 0;
+  position: relative;
+}
+@media (min-width: 900px) {
+  .section {
+    padding: 104px 0;
+  }
+}
+.section_tint {
+  background: var(--ns-primary-soft);
+}
+.section_warm {
+  background: var(--ns-surface-subtle);
+}
+.section_ink {
+  background: var(--ns-surface-inverse);
+  color: var(--ns-text-inverse);
+}
+
+.sectionHead {
+  display: grid;
+  gap: 16px;
+  max-width: 820px;
+  margin-bottom: 44px;
+  justify-items: start;
+}
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  justify-items: center;
+}
+.sectionTitle {
+  font-size: clamp(2rem, 3.4vw, 3.6rem);
+  position: relative;
+}
+.sectionIntro {
+  font-size: 1.15rem;
+  color: var(--ns-text-secondary);
+}
+.section_ink .sectionIntro {
+  color: inherit;
+  opacity: 0.85;
+}
+.doodle {
+  display: inline-block;
+  width: 54px;
+  height: 27px;
+  margin-left: 10px;
+  vertical-align: middle;
+  color: var(--ns-energy);
+}
+
+.card {
+  border-radius: var(--ns-radius-xl);
+  border: 2px solid var(--ns-border-strong);
+  box-shadow: 5px 6px 0 0 var(--ns-tactile-shadow);
+  padding: 28px;
+  background: var(--ns-surface);
+  color: var(--ns-text-primary);
+}
+.card_primary {
+  background: var(--ns-primary-soft);
+}
+.card_reward {
+  background: var(--ns-reward-soft);
+}
+.card_energy {
+  background: var(--ns-energy-soft);
+}
+.card_calm {
+  background: var(--ns-calm-soft);
+}
+.card_success {
+  background: var(--ns-success-soft);
+}
+.card_danger {
+  background: var(--ns-danger-soft);
+}
+.card_ink {
+  background: var(--ns-surface-inverse);
+  color: var(--ns-text-inverse);
+}
+
+.pageHero {
+  padding: 56px 0 40px;
+  background: radial-gradient(circle at 85% 20%, var(--ns-primary-soft) 0 220px, transparent 221px);
+}
+.pageHeroInner {
+  display: grid;
+  gap: 32px;
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .pageHero {
+    padding: 88px 0 64px;
+  }
+  .pageHeroInner {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+}
+.pageTitle {
+  font-size: clamp(2.4rem, 5vw, 5rem);
+  margin: 18px 0 18px;
+}
+.pageIntro {
+  font-size: 1.2rem;
+  color: var(--ns-text-secondary);
+  max-width: 680px;
+}
+.pageHeroArt {
+  max-width: 380px;
+  justify-self: center;
+  width: 100%;
+}
+
+.chip {
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  border: 2px solid var(--ns-border-strong);
+  flex: none;
+}
+.chip_primary {
+  background: var(--ns-primary-soft);
+  color: var(--ns-primary-soft-text);
+}
+.chip_reward {
+  background: var(--ns-reward-soft);
+  color: var(--ns-reward-text);
+}
+.chip_energy {
+  background: var(--ns-energy-soft);
+  color: var(--ns-energy-text);
+}
+.chip_calm {
+  background: var(--ns-calm-soft);
+  color: var(--ns-calm-text);
+}
+.chip_success {
+  background: var(--ns-success-soft);
+  color: var(--ns-success-text);
+}
+
+/* ---------- Motion details ---------- */
+.floaty {
+  animation: float 6s ease-in-out infinite;
+}
+.card {
+  transition:
+    transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.chip svg {
+  transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card:hover .chip svg {
+  transform: rotate(-10deg) scale(1.12);
+}
+/* Doodle next to section titles gives a little hop when the heading is revealed. */
+[data-motion='on'] [data-reveal][data-in] .doodle {
+  animation: wiggle 900ms 500ms ease-in-out 1;
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0);
+  }
+}
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-8deg) translateY(-3px);
+  }
+  75% {
+    transform: rotate(8deg);
+  }
+}

@@ -1,0 +1,577 @@
+// NextStep data model. Every user-owned, synchronised table carries:
+//   rev        — per-user sync revision of the last accepted change (server-issued cursor)
+//   fieldRevs  — revision per field, used for field-level conflict detection
+//   deletedAt  — tombstone; deleted records are never resurrected by stale updates
+// Ownership is enforced in application code on every query (userId filter) and
+// by foreign keys with cascade delete from User for account deletion.
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String    @id @db.Uuid
+  email        String    @unique
+  passwordHash String
+  displayName  String
+  syncRev      Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastLoginAt  DateTime?
+
+  refreshTokens   RefreshToken[]
+  resetTokens     PasswordResetToken[]
+  preferences     UserPreferences?
+  semesters       Semester[]
+  courses         Course[]
+  tasks           Task[]
+  subtasks        Subtask[]
+  availability    AvailabilityRule[]
+  commitments     Commitment[]
+  dayOverrides    DayOverride[]
+  sessions        ScheduledSession[]
+  planRevisions   PlanRevision[]
+  focusLogs       FocusLog[]
+  proposals       RecoveryProposal[]
+  reflections     WeeklyReflection[]
+  goals           PersonalGoal[]
+  goalCheckins    GoalCheckin[]
+  resourceProgress ResourceProgress[]
+  events          GamificationEvent[]
+  achievements    UserAchievement[]
+  syncOps         SyncOperation[]
+  deletions       DeletionMarker[]
+  conflicts       SyncConflict[]
+  aiUsage         AiUsage[]
+}
+
+model RefreshToken {
+  id          String    @id @db.Uuid
+  userId      String    @db.Uuid
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// SHA-256 of the opaque token; the token itself is never stored.
+  tokenHash   String    @unique
+  familyId    String    @db.Uuid
+  deviceId    String?
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  replacedBy  String?   @db.Uuid
+  createdAt   DateTime  @default(now())
+  lastUsedAt  DateTime?
+
+  @@index([userId])
+  @@index([familyId])
+}
+
+model PasswordResetToken {
+  id        String    @id @db.Uuid
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model UserPreferences {
+  id                      String    @id @db.Uuid
+  userId                  String    @unique @db.Uuid
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName             String
+  timezone                String
+  institution             String?
+  programme               String?
+  defaultSessionMinutes   Int
+  minSessionMinutes       Int
+  maxSessionMinutes       Int
+  breakMinutes            Int
+  dailyLimitMinutes       Int
+  bufferMinutes           Int
+  deadlineBufferHours     Int
+  maxSessionsPerTaskPerDay Int
+  planningMode            String
+  weeklyActiveDaysGoal    Int
+  quietHoursStart         String
+  quietHoursEnd           String
+  notifySessions          Boolean
+  notifyDeadlines         Boolean
+  notifyRecovery          Boolean
+  reminderLeadMinutes     Int
+  theme                   String
+  motion                  String
+  haptics                 Boolean
+  sound                   Boolean
+  streaksEnabled          Boolean
+  celebrationsEnabled     Boolean
+  syncOnCellular          Boolean
+  mascotSkin              String
+  mascotAccessory         String
+  onboardingCompletedAt   DateTime?
+  rev                     Int
+  fieldRevs               Json      @default("{}")
+  createdAt               DateTime
+  updatedAt               DateTime
+  deletedAt               DateTime?
+
+  @@index([userId, rev])
+}
+
+model Semester {
+  id        String    @id @db.Uuid
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  startDate String?
+  endDate   String?
+  rev       Int
+  fieldRevs Json      @default("{}")
+  createdAt DateTime
+  updatedAt DateTime
+  deletedAt DateTime?
+
+  @@index([userId, rev])
+}
+
+model Course {
+  id         String    @id @db.Uuid
+  userId     String    @db.Uuid
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title      String
+  code       String?
+  color      String
+  semesterId String?   @db.Uuid
+  rev        Int
+  fieldRevs  Json      @default("{}")
+  createdAt  DateTime
+  updatedAt  DateTime
+  deletedAt  DateTime?
+
+  @@index([userId, rev])
+}
+
+model Task {
+  id                      String    @id @db.Uuid
+  userId                  String    @db.Uuid
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title                   String
+  description             String?
+  courseId                String?   @db.Uuid
+  goalId                  String?   @db.Uuid
+  kind                    String
+  dueAt                   DateTime?
+  importance              Int
+  estimatedMinutes        Int
+  remainingMinutes        Int
+  status                  String
+  dependsOn               String[]
+  preferredSessionMinutes Int?
+  splittable              Boolean
+  optional                Boolean
+  connectivity            String
+  links                   Json      @default("[]")
+  resourceIds             String[]
+  completedAt             DateTime?
+  rev                     Int
+  fieldRevs               Json      @default("{}")
+  createdAt               DateTime
+  updatedAt               DateTime
+  deletedAt               DateTime?
+
+  subtasks Subtask[]
+  sessions ScheduledSession[]
+
+  @@index([userId, rev])
+  @@index([userId, dueAt])
+}
+
+model Subtask {
+  id               String    @id @db.Uuid
+  userId           String    @db.Uuid
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskId           String    @db.Uuid
+  task             Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  title            String
+  done             Boolean
+  position         Int
+  estimatedMinutes Int?
+  completedAt      DateTime?
+  rev              Int
+  fieldRevs        Json      @default("{}")
+  createdAt        DateTime
+  updatedAt        DateTime
+  deletedAt        DateTime?
+
+  @@index([userId, rev])
+  @@index([taskId])
+}
+
+model AvailabilityRule {
+  id        String    @id @db.Uuid
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weekday   Int
+  start     String
+  end       String
+  online    Boolean
+  label     String?
+  rev       Int
+  fieldRevs Json      @default("{}")
+  createdAt DateTime
+  updatedAt DateTime
+  deletedAt DateTime?
+
+  @@index([userId, rev])
+}
+
+model Commitment {
+  id        String    @id @db.Uuid
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  kind      String
+  weekdays  Int[]
+  date      String?
+  start     String
+  end       String
+  protected Boolean
+  rev       Int
+  fieldRevs Json      @default("{}")
+  createdAt DateTime
+  updatedAt DateTime
+  deletedAt DateTime?
+
+  @@index([userId, rev])
+}
+
+model DayOverride {
+  id         String    @id @db.Uuid
+  userId     String    @db.Uuid
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date       String
+  maxMinutes Int?
+  windows    Json?
+  reason     String
+  source     String
+  rev        Int
+  fieldRevs  Json      @default("{}")
+  createdAt  DateTime
+  updatedAt  DateTime
+  deletedAt  DateTime?
+
+  @@index([userId, rev])
+  @@index([userId, date])
+}
+
+model ScheduledSession {
+  id             String    @id @db.Uuid
+  userId         String    @db.Uuid
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskId         String    @db.Uuid
+  task           Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  startAt        DateTime
+  endAt          DateTime
+  minutes        Int
+  status         String
+  pinned         Boolean
+  source         String
+  planRevisionId String?   @db.Uuid
+  label          String?
+  rev            Int
+  fieldRevs      Json      @default("{}")
+  createdAt      DateTime
+  updatedAt      DateTime
+  deletedAt      DateTime?
+
+  @@index([userId, rev])
+  @@index([userId, startAt])
+}
+
+/// The current plan is the set of live sessions; each change is recorded as a numbered revision.
+model PlanRevision {
+  id               String    @id @db.Uuid
+  userId           String    @db.Uuid
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  number           Int
+  parentNumber     Int?
+  reason           String
+  summary          String
+  replacedSessions Json      @default("[]")
+  createdSessionIds String[]
+  proposalId       String?   @db.Uuid
+  undoneAt         DateTime?
+  rev              Int
+  fieldRevs        Json      @default("{}")
+  createdAt        DateTime
+  updatedAt        DateTime
+  deletedAt        DateTime?
+
+  /// Two devices can't both create revision N: the second gets a STALE_PLAN conflict.
+  @@unique([userId, number])
+  @@index([userId, rev])
+}
+
+model FocusLog {
+  id               String    @id @db.Uuid
+  userId           String    @db.Uuid
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskId           String?   @db.Uuid
+  sessionId        String?   @db.Uuid
+  mode             String
+  startedAt        DateTime
+  endedAt          DateTime
+  focusMinutes     Int
+  breakCount       Int
+  finishedNote     String?
+  remainingMinutes Int?
+  readiness        String?
+  obstacles        String[]
+  rev              Int
+  fieldRevs        Json      @default("{}")
+  createdAt        DateTime
+  updatedAt        DateTime
+  deletedAt        DateTime?
+
+  @@index([userId, rev])
+}
+
+model RecoveryProposal {
+  id                    String    @id @db.Uuid
+  userId                String    @db.Uuid
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind                  String
+  input                 Json
+  baseRevision          Int
+  fingerprint           String
+  status                String
+  summary               String
+  nextActionSessionId   String?   @db.Uuid
+  nextActionCompletedAt DateTime?
+  acceptedAt            DateTime?
+  rev                   Int
+  fieldRevs             Json      @default("{}")
+  createdAt             DateTime
+  updatedAt             DateTime
+  deletedAt             DateTime?
+
+  @@index([userId, rev])
+}
+
+model WeeklyReflection {
+  id               String    @id @db.Uuid
+  userId           String    @db.Uuid
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weekStart        String
+  plannedMinutes   Int
+  completedMinutes Int
+  estimatedMinutes Int
+  actualMinutes    Int
+  wentWell         String?
+  obstacles        String[]
+  adjustments      String[]
+  note             String?
+  rev              Int
+  fieldRevs        Json      @default("{}")
+  createdAt        DateTime
+  updatedAt        DateTime
+  deletedAt        DateTime?
+
+  @@index([userId, rev])
+  @@index([userId, weekStart])
+}
+
+model PersonalGoal {
+  id                  String    @id @db.Uuid
+  userId              String    @db.Uuid
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title               String
+  category            String
+  weeklyTargetMinutes Int
+  sessionMinutes      Int
+  active              Boolean
+  scheduleIt          Boolean
+  rev                 Int
+  fieldRevs           Json      @default("{}")
+  createdAt           DateTime
+  updatedAt           DateTime
+  deletedAt           DateTime?
+
+  checkins GoalCheckin[]
+
+  @@index([userId, rev])
+}
+
+model GoalCheckin {
+  id        String       @id @db.Uuid
+  userId    String       @db.Uuid
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goalId    String       @db.Uuid
+  goal      PersonalGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  date      String
+  minutes   Int
+  note      String?
+  rev       Int
+  fieldRevs Json         @default("{}")
+  createdAt DateTime
+  updatedAt DateTime
+  deletedAt DateTime?
+
+  @@index([userId, rev])
+}
+
+/// Catalogue content (not user data). Seeded from original sample material.
+model LearningResource {
+  id           String   @id @db.Uuid
+  slug         String   @unique
+  title        String
+  subject      String
+  kind         String
+  summary      String
+  estMinutes   Int
+  version      Int
+  provenance   String
+  reviewStatus String
+  license      String
+  content      Json
+  sizeBytes    Int
+  publishedAt  DateTime @default(now())
+
+  progress ResourceProgress[]
+}
+
+model ResourceProgress {
+  id                String           @id @db.Uuid
+  userId            String           @db.Uuid
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resourceId        String           @db.Uuid
+  resource          LearningResource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  downloadedVersion Int?
+  downloadedAt      DateTime?
+  completedAt       DateTime?
+  lastScore         Int?
+  attempts          Int
+  rev               Int
+  fieldRevs         Json             @default("{}")
+  createdAt         DateTime
+  updatedAt         DateTime
+  deletedAt         DateTime?
+
+  @@unique([userId, resourceId])
+  @@index([userId, rev])
+}
+
+/// Append-only XP ledger. The unique dedupe key makes every award idempotent.
+model GamificationEvent {
+  id         String    @id @db.Uuid
+  userId     String    @db.Uuid
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dedupeKey  String
+  type       String
+  xp         Int
+  occurredAt DateTime
+  localDate  String
+  meta       Json      @default("{}")
+  status     String    @default("confirmed")
+  rev        Int
+  fieldRevs  Json      @default("{}")
+  createdAt  DateTime
+  updatedAt  DateTime
+  deletedAt  DateTime?
+
+  @@unique([userId, dedupeKey])
+  @@index([userId, rev])
+  @@index([userId, localDate])
+}
+
+model Achievement {
+  id          String @id
+  title       String
+  description String
+  rule        String
+  badge       String
+
+  unlocks UserAchievement[]
+}
+
+model UserAchievement {
+  id            String      @id @db.Uuid
+  userId        String      @db.Uuid
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+  unlockedAt    DateTime
+  rev           Int
+  fieldRevs     Json        @default("{}")
+  createdAt     DateTime
+  updatedAt     DateTime
+  deletedAt     DateTime?
+
+  @@unique([userId, achievementId])
+  @@index([userId, rev])
+}
+
+/// Idempotency log: a retried push with the same opId returns the stored result.
+model SyncOperation {
+  opId      String   @id @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceId  String
+  entity    String
+  entityId  String   @db.Uuid
+  status    String
+  result    Json
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+/// Survives record purges so a stale device can never recreate a deleted record.
+model DeletionMarker {
+  id        String   @id @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entity    String
+  entityId  String   @db.Uuid
+  rev       Int
+  deletedAt DateTime
+
+  @@unique([userId, entity, entityId])
+}
+
+/// Both versions of a concurrent edit to an important field, kept for the student to resolve.
+model SyncConflict {
+  id           String    @id @db.Uuid
+  userId       String    @db.Uuid
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entity       String
+  entityId     String    @db.Uuid
+  fields       String[]
+  serverValues Json
+  clientValues Json
+  status       String    @default("open")
+  resolution   String?
+  rev          Int
+  createdAt    DateTime  @default(now())
+  resolvedAt   DateTime?
+
+  @@index([userId, rev])
+  @@index([userId, status])
+}
+
+model AiUsage {
+  id        String   @id @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  feature   String
+  ok        Boolean
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
