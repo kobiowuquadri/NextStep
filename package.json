@@ -10,7 +10,7 @@
   "scripts": {
     "build:packages": "pnpm -r --filter \"./packages/*\" run build",
     "build": "pnpm build:packages && pnpm --filter @nextstep/api build && pnpm --filter @nextstep/web build",
-    "build:web": "pnpm build:packages && pnpm --filter @nextstep/web build",
+    "build:web": "pnpm --filter @nextstep/web build",
     "build:api": "pnpm --filter \"@nextstep/api^...\" run build && pnpm --filter @nextstep/api build",
     "test": "pnpm build:packages && pnpm -r --filter \"./packages/*\" run test && pnpm --filter @nextstep/api test",
     "test:packages": "pnpm -r --filter \"./packages/*\" run test",
