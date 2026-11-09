@@ -1,0 +1,10 @@
+# Keep LF line endings in the repository and on checkout (matches .editorconfig).
+* text=auto eol=lf
+
+# Binary assets
+*.png binary
+*.webp binary
+*.jpg binary
+*.ico binary
+*.ttf binary
+*.woff2 binary
