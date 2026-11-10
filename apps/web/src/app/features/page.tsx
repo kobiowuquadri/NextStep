@@ -140,7 +140,7 @@ export default function FeaturesPage() {
       <Section>
         <div className={styles.ctaRow} style={{ marginTop: 0 }}>
           <ButtonLink href="/demo" size="lg">
-            Try the demo <ArrowRight size={20} aria-hidden />
+            Watch the demo <ArrowRight size={20} aria-hidden />
           </ButtonLink>
         </div>
         <DownloadAvailability />

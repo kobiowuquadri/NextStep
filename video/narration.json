@@ -1,0 +1,54 @@
+{
+  "voice": "af_heart",
+  "speed": 1.0,
+  "lines": [
+    {
+      "id": "intro",
+      "text": "This is NextStep: a study planner for students juggling classes, work, and life."
+    },
+    {
+      "id": "tobi",
+      "text": "Meet Tobi. Tobi is fictional: a second-year student who works shifts at a print shop and rides the bus home.",
+      "say": "Meet Toby. Toby is fictional: a second-year student who works shifts at a print shop and rides the bus home."
+    },
+    {
+      "id": "today",
+      "text": "Every day starts with Today: only what's realistic, the next session, and why it matters. Yesterday, three sessions didn't happen. That's okay."
+    },
+    {
+      "id": "recover1",
+      "text": "When plans change, Tobi taps 'My plans changed', picks 'I have less time', and says forty-five minutes.",
+      "say": "When plans change, Toby taps 'My plans changed', picks 'I have less time', and says forty-five minutes."
+    },
+    {
+      "id": "recover2",
+      "text": "NextStep shows exactly what moves, with a reason for every change. Nothing changes until Tobi accepts.",
+      "say": "NextStep shows exactly what moves, with a reason for every change. Nothing changes until Toby accepts."
+    },
+    {
+      "id": "focus",
+      "text": "Then there's one small next step. The focus timer is saved with timestamps, so it keeps counting even if the app closes."
+    },
+    {
+      "id": "checkin",
+      "text": "Afterwards, a quick check-in records what got done, and what's left."
+    },
+    {
+      "id": "badge",
+      "text": "Finishing it earns Back on Track: once, and only for real progress."
+    },
+    {
+      "id": "journey",
+      "text": "Progress builds along the journey, with a weekly rhythm instead of fragile daily streaks."
+    },
+    {
+      "id": "plan",
+      "text": "The week fits around work, lectures, and rest. Planning, Recovery Mode, and focus all work offline after setup, and sync when you reconnect."
+    },
+    {
+      "id": "outro",
+      "text": "NextStep. Plans change. Keep moving."
+    }
+  ],
+  "note": "'text' is what captions show; 'say' (optional) is a pronunciation hint for the voice."
+}

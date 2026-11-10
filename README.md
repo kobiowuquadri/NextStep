@@ -9,7 +9,8 @@ It is built first for Nigerian tertiary and distance-learning students balancing
 | Part | What it is | Where |
 |---|---|---|
 | Mobile app | React Native / Expo (SDK 58) app for Android (first) and iOS. Offline-first with SQLite and sync. | `apps/mobile` |
-| Website | Next.js 16 informative site + **browser demo** with fictional data | `apps/web` |
+| Website | Next.js 16 informative site, a **narrated demo video** of the real app (`/demo`) and an interactive **browser demo** with fictional data (`/demo/interactive`) | `apps/web` |
+| Demo video | Remotion project that turns real app footage, motion graphics and a synthetic narration voice into the `/demo` video | `video` |
 | API | NestJS 12 + PostgreSQL (Prisma 7) REST API with offline sync | `apps/api` |
 | Shared logic | Contracts (Zod), deterministic scheduler, gamification rules, domain engine, design tokens, illustrations, demo data | `packages/*` |
 
@@ -25,7 +26,7 @@ The scheduler, Recovery Mode and gamification rules live in shared packages and 
 apps/
   api/        NestJS API, Prisma schema + migrations, seed, Dockerfile, integration tests
   mobile/     Expo Router app (5 tabs), SQLite store, outbox sync, local notifications
-  web/        Next.js site (9 pages) + /demo, Playwright e2e tests
+  web/        Next.js site (9 pages), /demo video page, /demo/interactive browser demo, Playwright e2e tests
 packages/
   contracts/      Zod schemas: entities, sync protocol, API DTOs, timezone helpers
   scheduler/      Deterministic planner, shortfall options, Recovery Mode, Today view
@@ -63,7 +64,7 @@ pnpm dev:api                             # http://localhost:4000  · API docs at
 
 # 3. Website + browser demo
 cp apps/web/.env.example apps/web/.env.local
-pnpm dev:web                             # http://localhost:3000  · demo at /demo
+pnpm dev:web                             # http://localhost:3000  · video at /demo, interactive demo at /demo/interactive
 
 # 4. Mobile app
 cp apps/mobile/.env.example apps/mobile/.env   # EXPO_PUBLIC_API_URL (emulator: http://10.0.2.2:4000)
@@ -77,7 +78,7 @@ The website demo and the mobile **sample semester** / **guest mode** need no API
 ```bash
 pnpm test:packages                       # 95 unit tests: contracts, tokens, illustrations, scheduler, gamification, engine, demo scenario
 pnpm test:api                            # 42 API + offline-sync integration tests on a throwaway PostgreSQL
-pnpm build:web && pnpm test:web          # 46 Playwright e2e tests (desktop + Pixel 7)
+pnpm build:web && pnpm test:web          # 50 Playwright e2e tests (desktop + Pixel 7)
                                          # no bundled Playwright browser? add E2E_CHANNEL=chrome
 pnpm check:secrets                       # no server secrets in client code or bundles
 pnpm typecheck

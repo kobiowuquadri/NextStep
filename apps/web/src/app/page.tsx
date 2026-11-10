@@ -13,6 +13,7 @@ import {
   HeartHandshake,
   ListChecks,
   NotebookPen,
+  Play,
   Route,
   ShieldCheck,
   Shuffle,
@@ -87,7 +88,7 @@ export default function HomePage() {
             </p>
             <div className={`${styles.heroCtas} rise`} style={d(4)}>
               <ButtonLink href="/demo" size="lg">
-                Try the demo <ArrowRight size={20} aria-hidden />
+                <Play size={20} aria-hidden /> Watch the demo
               </ButtonLink>
               <ButtonLink href="/features" variant="secondary" size="lg">
                 Explore the app
@@ -105,7 +106,7 @@ export default function HomePage() {
               </li>
             </ul>
             <p className={`${styles.heroNote} rise`} style={d(6)}>
-              The demo runs in your browser with a fictional student. No sign-up.
+              A short narrated walkthrough of the real app. Prefer to click? <Link href="/demo/interactive">Try the interactive demo</Link>, no sign-up.
             </p>
           </div>
 
@@ -457,7 +458,7 @@ export default function HomePage() {
           id="story-title"
           eyebrow="An illustrative scenario"
           title="One of Tobi’s evenings."
-          intro="Tobi is fictional — a second-year student in Lagos who works shifts at a print shop and rides the bus home. This is the scenario the demo lets you play through."
+          intro="Tobi is fictional — a second-year student in Lagos who works shifts at a print shop and rides the bus home. This is the scenario in the demo video, and you can play it through yourself."
         />
         <ol className={styles.timeline}>
           {[
@@ -477,7 +478,7 @@ export default function HomePage() {
           ))}
         </ol>
         <div className={styles.storyCta} {...reveal('up')}>
-          <ButtonLink href="/demo" variant="energy" size="lg">
+          <ButtonLink href="/demo/interactive" variant="energy" size="lg">
             Play Tobi’s week <ArrowRight size={20} aria-hidden />
           </ButtonLink>
         </div>
@@ -518,10 +519,12 @@ export default function HomePage() {
             <h2 id="cta-title" className={styles.ctaTitle}>
               Your next step is waiting.
             </h2>
-            <p className={styles.ctaText}>Try the full Recovery Mode flow in your browser in about three minutes.</p>
+            <p className={styles.ctaText}>
+              Watch the narrated walkthrough of the real app, or <Link href="/demo/interactive">try Recovery Mode yourself</Link> in your browser.
+            </p>
             <div className={styles.heroCtas}>
               <ButtonLink href="/demo" size="lg">
-                Try the demo <ArrowRight size={20} aria-hidden />
+                <Play size={20} aria-hidden /> Watch the demo
               </ButtonLink>
               <ButtonLink href="/features" variant="secondary" size="lg">
                 Explore the app

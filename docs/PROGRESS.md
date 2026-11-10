@@ -22,7 +22,7 @@ Mapped to the sections of the product brief. ✅ done and tested (automated or m
 | React Native app, Android first | ✅ Android: emulator QA in Expo Go and a locally built release APK (66.1 MB) · 🟡 iOS not built or tested |
 | Responsive informative website | ✅ 9 pages + reset-password page, desktop and mobile e2e tests |
 | Backend API and database | ✅ NestJS + PostgreSQL, integration tests on real PostgreSQL |
-| Browser demo with fictional data and reset | ✅ `/demo` |
+| Browser demo with fictional data and reset | ✅ `/demo/interactive` (and a narrated video of the real app at `/demo`) |
 | Docs, env examples, seed data, deployment instructions | ✅ `README.md`, `docs/`, `.env.example` ×3, `prisma/seed.ts`, Dockerfile |
 | Original brand and design system | ✅ tokens, mascot, illustrations, badges |
 

@@ -1,0 +1,325 @@
+{
+  "fps": 30,
+  "totalFrames": 2809,
+  "chapters": [
+    "Today",
+    "Recover",
+    "Focus",
+    "Progress",
+    "Plan"
+  ],
+  "scenes": [
+    {
+      "id": "intro",
+      "kind": "intro",
+      "seconds": 6,
+      "voice": [
+        {
+          "id": "intro",
+          "file": "voice/intro.wav",
+          "from": 18,
+          "frames": 147
+        }
+      ],
+      "start": 0,
+      "frames": 180,
+      "clips": [],
+      "callouts": []
+    },
+    {
+      "id": "tobi",
+      "kind": "tobi",
+      "seconds": 7.6,
+      "voice": [
+        {
+          "id": "tobi",
+          "file": "voice/tobi.wav",
+          "from": 15,
+          "frames": 192
+        }
+      ],
+      "start": 180,
+      "frames": 228,
+      "clips": [],
+      "callouts": []
+    },
+    {
+      "id": "today",
+      "kind": "phone",
+      "chapter": 0,
+      "eyebrow": "Today",
+      "title": [
+        "Only what’s",
+        "realistic."
+      ],
+      "sub": "The next session, and why it matters.",
+      "clips": [
+        {
+          "name": "today",
+          "frames": 301
+        }
+      ],
+      "voice": [
+        {
+          "id": "today",
+          "file": "voice/today.wav",
+          "from": 33,
+          "frames": 263
+        }
+      ],
+      "start": 408,
+      "frames": 301,
+      "callouts": []
+    },
+    {
+      "id": "recover",
+      "kind": "phone",
+      "chapter": 1,
+      "eyebrow": "Recovery Mode",
+      "title": [
+        "Plans changed?",
+        "Tap once."
+      ],
+      "sub": "Every change comes with a reason. Nothing moves until you accept.",
+      "clips": [
+        {
+          "name": "rec-sheet",
+          "frames": 108
+        },
+        {
+          "name": "rec-time",
+          "frames": 83
+        },
+        {
+          "name": "rec-preview",
+          "frames": 179
+        },
+        {
+          "name": "rec-scroll",
+          "frames": 95
+        },
+        {
+          "name": "rec-accept",
+          "frames": 126
+        }
+      ],
+      "voice": [
+        {
+          "id": "recover1",
+          "file": "voice/recover1.wav",
+          "from": 9,
+          "frames": 184
+        },
+        {
+          "id": "recover2",
+          "file": "voice/recover2.wav",
+          "from": 210,
+          "frames": 205
+        }
+      ],
+      "callouts": [
+        {
+          "at": 7.4,
+          "until": 15.6,
+          "tone": "calm",
+          "text": "Before → after, with a reason",
+          "from": 222,
+          "to": 468
+        },
+        {
+          "at": 16.2,
+          "until": 19.8,
+          "tone": "reward",
+          "text": "You still have a next step",
+          "from": 486,
+          "to": 594
+        }
+      ],
+      "start": 709,
+      "frames": 591
+    },
+    {
+      "id": "focus",
+      "kind": "phone",
+      "chapter": 2,
+      "eyebrow": "Focus",
+      "title": [
+        "One small",
+        "next step."
+      ],
+      "sub": "A timer saved as timestamps, so it survives app restarts.",
+      "clips": [
+        {
+          "name": "focus-pick",
+          "frames": 140
+        },
+        {
+          "name": "focus-timer",
+          "frames": 224
+        }
+      ],
+      "voice": [
+        {
+          "id": "focus",
+          "file": "voice/focus.wav",
+          "from": 36,
+          "frames": 216
+        }
+      ],
+      "start": 1300,
+      "frames": 364,
+      "callouts": []
+    },
+    {
+      "id": "checkin",
+      "kind": "phone",
+      "chapter": 2,
+      "eyebrow": "Check-in",
+      "title": [
+        "What got done,",
+        "what’s left."
+      ],
+      "sub": "Your own sense of readiness, not a grade.",
+      "clips": [
+        {
+          "name": "checkin-open",
+          "frames": 119
+        },
+        {
+          "name": "checkin-ready",
+          "frames": 114
+        }
+      ],
+      "voice": [
+        {
+          "id": "checkin",
+          "file": "voice/checkin.wav",
+          "from": 42,
+          "frames": 109
+        }
+      ],
+      "start": 1664,
+      "frames": 233,
+      "callouts": []
+    },
+    {
+      "id": "badge",
+      "kind": "phone",
+      "chapter": 3,
+      "eyebrow": "Back on Track",
+      "title": [
+        "Earned once,",
+        "for real progress."
+      ],
+      "sub": "No points for busywork.",
+      "clips": [
+        {
+          "name": "badge",
+          "frames": 147
+        }
+      ],
+      "voice": [
+        {
+          "id": "badge",
+          "file": "voice/badge.wav",
+          "from": 24,
+          "frames": 123
+        }
+      ],
+      "badge": true,
+      "start": 1897,
+      "frames": 147,
+      "callouts": []
+    },
+    {
+      "id": "journey",
+      "kind": "phone",
+      "chapter": 3,
+      "eyebrow": "Journey",
+      "title": [
+        "A weekly rhythm,",
+        "not fragile streaks."
+      ],
+      "sub": "Missing a day never resets your progress.",
+      "clips": [
+        {
+          "name": "journey",
+          "frames": 221
+        }
+      ],
+      "voice": [
+        {
+          "id": "journey",
+          "file": "voice/journey.wav",
+          "from": 30,
+          "frames": 152
+        }
+      ],
+      "start": 2044,
+      "frames": 221,
+      "callouts": []
+    },
+    {
+      "id": "plan",
+      "kind": "phone",
+      "chapter": 4,
+      "eyebrow": "Plan",
+      "title": [
+        "A week that fits",
+        "your life."
+      ],
+      "sub": "Works offline after setup. Syncs when you reconnect.",
+      "clips": [
+        {
+          "name": "plan-today",
+          "frames": 119
+        },
+        {
+          "name": "plan-wed",
+          "frames": 113
+        },
+        {
+          "name": "plan-tasks",
+          "frames": 102
+        }
+      ],
+      "voice": [
+        {
+          "id": "plan",
+          "file": "voice/plan.wav",
+          "from": 27,
+          "frames": 264
+        }
+      ],
+      "callouts": [
+        {
+          "at": 4.6,
+          "until": 11.2,
+          "tone": "calm",
+          "text": "Works offline after setup",
+          "from": 138,
+          "to": 336
+        }
+      ],
+      "start": 2265,
+      "frames": 334
+    },
+    {
+      "id": "outro",
+      "kind": "outro",
+      "seconds": 7,
+      "voice": [
+        {
+          "id": "outro",
+          "file": "voice/outro.wav",
+          "from": 42,
+          "frames": 77
+        }
+      ],
+      "start": 2599,
+      "frames": 210,
+      "clips": [],
+      "callouts": []
+    }
+  ]
+}

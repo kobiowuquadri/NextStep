@@ -23,7 +23,10 @@ function assertWellFormed(svg: string) {
   expect(svg.trimEnd().endsWith('</svg>')).toBe(true);
   const stack: string[] = [];
   for (const m of svg.matchAll(/<(\/?)([a-zA-Z][\w:-]*)([^>]*?)(\/?)>/g)) {
-    const [, closing, name, , selfClosing] = m;
+    const [, closing, name, attrs, selfClosing] = m;
+    // Duplicate attributes are invalid XML: browsers tolerate them inline but reject the SVG as an image file.
+    const names = [...attrs!.matchAll(/([\w:-]+)=/g)].map((a) => a[1]);
+    expect(names.length, `duplicate attribute on <${name}${attrs}>`).toBe(new Set(names).size);
     if (selfClosing) continue;
     if (closing) expect(stack.pop(), `unexpected </${name}>`).toBe(name);
     else stack.push(name!);

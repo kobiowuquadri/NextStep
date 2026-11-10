@@ -1,0 +1,62 @@
+{
+  "duration": 93.7,
+  "bytes": 12677727,
+  "width": 1920,
+  "height": 1080,
+  "voice": "Kokoro (af_heart), synthetic",
+  "chapters": [
+    {
+      "label": "Welcome",
+      "start": 0
+    },
+    {
+      "label": "Meet Tobi",
+      "start": 6
+    },
+    {
+      "label": "Today",
+      "start": 13.6
+    },
+    {
+      "label": "Recovery Mode",
+      "start": 23.6
+    },
+    {
+      "label": "Focus",
+      "start": 43.3
+    },
+    {
+      "label": "Check-in",
+      "start": 55.5
+    },
+    {
+      "label": "Back on Track",
+      "start": 63.2
+    },
+    {
+      "label": "Journey",
+      "start": 68.1
+    },
+    {
+      "label": "Plan",
+      "start": 75.5
+    },
+    {
+      "label": "Keep moving",
+      "start": 86.6
+    }
+  ],
+  "transcript": [
+    "This is NextStep: a study planner for students juggling classes, work, and life.",
+    "Meet Tobi. Tobi is fictional: a second-year student who works shifts at a print shop and rides the bus home.",
+    "Every day starts with Today: only what's realistic, the next session, and why it matters. Yesterday, three sessions didn't happen. That's okay.",
+    "When plans change, Tobi taps 'My plans changed', picks 'I have less time', and says forty-five minutes.",
+    "NextStep shows exactly what moves, with a reason for every change. Nothing changes until Tobi accepts.",
+    "Then there's one small next step. The focus timer is saved with timestamps, so it keeps counting even if the app closes.",
+    "Afterwards, a quick check-in records what got done, and what's left.",
+    "Finishing it earns Back on Track: once, and only for real progress.",
+    "Progress builds along the journey, with a weekly rhythm instead of fragile daily streaks.",
+    "The week fits around work, lectures, and rest. Planning, Recovery Mode, and focus all work offline after setup, and sync when you reconnect.",
+    "NextStep. Plans change. Keep moving."
+  ]
+}

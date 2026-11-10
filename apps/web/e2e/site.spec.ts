@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-const PAGES = ['/', '/how-it-works', '/features', '/community', '/about', '/faq', '/privacy', '/terms', '/demo'];
+const PAGES = ['/', '/how-it-works', '/features', '/community', '/about', '/faq', '/privacy', '/terms', '/demo', '/demo/interactive'];
 
 test.describe('website', () => {
   for (const path of PAGES) {
@@ -11,7 +11,7 @@ test.describe('website', () => {
       page.on('pageerror', (e) => errors.push(e.message));
       const res = await page.goto(path);
       expect(res?.status()).toBe(200);
-      if (path === '/demo') await page.getByText('Good evening').waitFor();
+      if (path === '/demo/interactive') await page.getByText('Good evening').waitFor();
       await expect(page.locator('h1')).toHaveCount(1);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
       expect(errors).toEqual([]);
@@ -20,7 +20,10 @@ test.describe('website', () => {
 
   test('primary and secondary CTAs go to the demo and the app tour', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('link', { name: /Try the demo/ }).first().click();
+    await page
+      .getByRole('link', { name: /Watch the demo/ })
+      .first()
+      .click();
     // Client-side navigation can take a few seconds while the suite runs in parallel.
     await expect(page).toHaveURL(/\/demo$/, { timeout: 15_000 });
     await page.goto('/');
@@ -93,6 +96,36 @@ test.describe('website', () => {
     await context.close();
   });
 
+  test('demo page plays the walkthrough video with captions, a transcript and a link to the interactive demo', async ({ page, request }) => {
+    await page.goto('/demo');
+    const video = page.locator('video');
+    await expect(video).toHaveAttribute('preload', 'metadata');
+    await expect(video).toHaveAttribute('poster', /\.jpg$/);
+    const src = await page.locator('video source').getAttribute('src');
+    const track = page.locator('video track[kind="captions"]');
+    await expect(track).toHaveAttribute('default', '');
+    const res = await request.get(src!);
+    expect(res.status()).toBe(200);
+    expect(res.headers()['content-type']).toContain('video/mp4');
+    const vtt = await request.get((await track.getAttribute('src'))!);
+    expect(await vtt.text()).toMatch(/^WEBVTT/);
+    await expect(page.getByText(/synthetic voice/).first()).toBeVisible();
+    await page.getByText('Read the transcript').click();
+    await expect(page.getByText(/Recovery Mode, and focus all work offline after setup/)).toBeVisible();
+    // Playwright's bundled Chromium has no H.264 decoder; real Chrome (E2E_CHANNEL=chrome) does.
+    const h264 = await video.evaluate((v: HTMLVideoElement) => v.canPlayType('video/mp4; codecs="avc1.640028"') !== '');
+    if (h264) {
+      await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.readyState), { timeout: 20_000 }).toBeGreaterThanOrEqual(1);
+      expect(await video.evaluate((v: HTMLVideoElement) => Math.round(v.duration))).toBeGreaterThan(60);
+      await page.getByRole('button', { name: /Recovery Mode/ }).click();
+      await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime), { timeout: 10_000 }).toBeGreaterThan(20);
+    } else {
+      test.info().annotations.push({ type: 'note', description: 'Browser cannot decode H.264; playback checks skipped.' });
+    }
+    await page.getByRole('link', { name: /Try the interactive demo/ }).click();
+    await expect(page).toHaveURL(/\/demo\/interactive$/, { timeout: 15_000 });
+  });
+
   test('sitemap and robots exist', async ({ request }) => {
     expect((await request.get('/sitemap.xml')).status()).toBe(200);
     expect(await (await request.get('/robots.txt')).text()).toContain('Sitemap');
@@ -100,7 +133,7 @@ test.describe('website', () => {
 });
 
 async function freshDemo(page: Page) {
-  await page.goto('/demo');
+  await page.goto('/demo/interactive');
   await page.evaluate(() => localStorage.removeItem('nextstep-demo-v1'));
   await page.reload();
   await page.getByText('Good evening').waitFor();

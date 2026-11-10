@@ -46,7 +46,7 @@ export function SiteHeader() {
         </nav>
         <div className={styles.headerCta}>
           <Link href="/demo" className={styles.demoBtn}>
-            Try the demo
+            Watch the demo
           </Link>
           <button className={styles.menuBtn} aria-expanded={open} aria-controls={menuId} onClick={() => setOpen((o) => !o)}>
             {open ? <X aria-hidden size={22} /> : <Menu aria-hidden size={22} />}
@@ -64,7 +64,7 @@ export function SiteHeader() {
             </li>
           ))}
           <li>
-            <Link href="/demo">Try the demo</Link>
+            <Link href="/demo">Watch the demo</Link>
           </li>
         </ul>
       </nav>

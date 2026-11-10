@@ -4,7 +4,7 @@ Everything shown uses **fictional data**. Say so once at the start: *“Tobi is 
 
 ## Before you start
 
-- Website running (`pnpm build:web && pnpm --filter @nextstep/web start`, or the deployed site) — open `/demo` and press **Reset demo**.
+- Website running (`pnpm build:web && pnpm --filter @nextstep/web start`, or the deployed site) — open `/demo/interactive` and press **Reset demo**. (`/demo` itself is the narrated walkthrough video; play it if you have no time for a live demo.)
 - Optional for the phone part: Android emulator or phone with the app (release APK or Expo Go), API running if you want to show sync.
 - Close other tabs; turn on “Do not disturb”.
 
@@ -14,7 +14,7 @@ Everything shown uses **fictional data**. Say so once at the start: *“Tobi is 
 
 Show the home page hero: *Plans change. Keep moving.*
 
-## 0:30 — Meet Tobi (45 s) — `/demo`, Today
+## 0:30 — Meet Tobi (45 s) — `/demo/interactive`, Today
 
 > “Tobi is in second year, works shifts at a print shop on Monday, Wednesday and Friday, takes the bus home, and has lectures on Tuesday and Thursday.”
 
@@ -62,7 +62,7 @@ If no phone is available, show the **On Android** screenshots on `/features` (ca
 
 ## If something goes wrong
 
-- Demo in a strange state → **Reset demo** (top of `/demo`).
+- Demo in a strange state → **Reset demo** (top of `/demo/interactive`).
 - No internet at the venue → the website demo and the phone app’s sample semester work fully offline once loaded.
 - AI features are optional and off without a server key — don’t demo them unless a key is configured.
 

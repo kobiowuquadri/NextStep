@@ -8,7 +8,8 @@ Results below were produced on the development machine (Windows 11, Node 24, Chr
 |---|---|---|
 | Shared packages (unit) | `pnpm test:packages` | **95 passed** (7 packages) |
 | API + offline sync (integration, real PostgreSQL) | `pnpm test:api` | **42 passed** (4 files) |
-| Website + browser demo (e2e, desktop Chrome and Pixel 7 emulation) | `pnpm build:web && pnpm test:web` | **46 passed** |
+| Website, demo video page + browser demo (e2e, desktop Chrome and Pixel 7 emulation) | `pnpm build:web && pnpm test:web` | **50 passed** |
+| Demo video (narration, captions, audio) | Whisper transcription of every line and of the final soundtrack; loudness and clipping check | **pass** — see [Demo video](#demo-video) |
 | Type checks | `pnpm typecheck` / `tsc --noEmit` in mobile and API | **pass** |
 | Secret scan of client code and built bundles | `pnpm check:secrets` | **pass** — 153 client files scanned |
 | Production website build | `pnpm build:web` | **pass** — 15 static routes |
@@ -44,7 +45,7 @@ No test was skipped or marked as expected-to-fail. The Docker image itself was n
 - **Mobile sync (real mobile modules)**: `mobile-sync.test.ts` runs the app’s own `db`, `repo`, `sync` and `api` modules on Node’s SQLite against the real API: first sync then offline edits that persist through a simulated restart and sync once without duplicates; a push whose response is lost is retried safely; two phones with concurrent deadline edits keep both versions for the student and deletions stay deleted; duplicate plan generation on two phones doesn’t duplicate sessions; offline XP confirmed once across phones; accounts isolated on a shared phone and local data deleted on sign-out.
 - **AI (stubbed provider, no network)**: student text can’t break out of its data block; every field of an AI draft is validated and clamped; refusals and provider errors fall back with `AI_UNAVAILABLE`; the daily limit is enforced before calling the provider.
 
-## End-to-end tests — website and demo (46 = 23 × 2 viewports)
+## End-to-end tests — website and demo (50 = 25 × 2 viewports)
 
 `apps/web/e2e/site.spec.ts` against the production build (`next start`), on desktop Chrome and Pixel 7 emulation:
 
@@ -55,6 +56,8 @@ No test was skipped or marked as expected-to-fail. The Docker image itself was n
 - Home hero slideshow: the pause button works and a screen can be chosen by hand.
 - Scroll reveals: motion is on and a section heading is revealed when scrolled into view.
 - With reduced motion: motion stays off, nothing is hidden, and the slideshow starts paused.
+- `/demo` video page: the MP4 is served as `video/mp4`, preloads metadata only, has a poster and an English captions track on by default (valid WebVTT), discloses the synthetic voice and shows the transcript. In Chrome the video loads (over 60 s long) and a chapter button seeks to Recovery Mode. These playback checks are skipped, with a note, in browsers without an H.264 decoder (Playwright's bundled Chromium); here they ran on both viewports.
+- Pages now include `/demo/interactive`, and the browser-demo tests run there.
 - Demo: less time → accept → next step → Back on Track once; “Keep my current plan” changes nothing; add a task + mark a missed session + reset restores the original state; overloaded week explains the shortfall; the recovery sheet is keyboard-accessible and closes with Escape.
 
 ## Manual QA on the Android emulator
@@ -134,6 +137,20 @@ Release APK built locally (`assembleRelease`, debug-signed, from a short-path co
 | Signing in on the release build against the local HTTP API | ❌ by design — release builds block plain HTTP; a release build needs an `https://` API URL (documented in DEPLOYMENT.md). Account sync was therefore verified in Expo Go (above) and by the automated `mobile-sync` tests. |
 
 A first local release APK crashed on Today with `TypeError: undefined is not a function`. Cause: an interrupted build had bundled new app code against old shared-package output, and the next Gradle run reused that bundle because the bundle task doesn’t track `packages/*`. Rebuilding with the bundle output removed fixed it; the pitfall is documented in DEPLOYMENT.md. The figures above are from the corrected build.
+
+## Demo video
+
+The `/demo` walkthrough (`video/`, rendered with Remotion; 93.7 s, 1920×1080, 12.7 MB web MP4) was checked on 10 Nov 2026:
+
+| Check | Result |
+|---|---|
+| Narration says what the script says | ✅ Each of the 11 synthetic-voice lines and the final soundtrack were transcribed with Whisper (`base.en`). Every sentence came back intact; the only differences were spellings (“next step” for NextStep, “45” for forty-five). “Tobi” was first heard as “toe by”, so the voice now gets the pronunciation hint “Toby” while captions keep “Tobi”. |
+| Captions line up with the voice | ✅ Each spoken line starts within 0.65 s of its caption, which is about as precise as Whisper's word timings. |
+| Audio level | ✅ Normalised for speech (≈ −18 dBFS RMS), peak 0.97 of full scale, no clipped samples. |
+| Footage is real and current | ✅ Recorded from the release APK (with the focus-timer fix) on the emulator, then trimmed. Frames at every cut were inspected, and three cuts were moved after the first render because the app took longer to show Today, Journey and Plan than the tap timestamps suggested. |
+| Every frame renders | ✅ 2,809 frames rendered without errors. The badge artwork failed to load as an image at first: `badgeSvg()` emitted duplicate `stroke-width` attributes, which is invalid XML (browsers tolerate it inline). This is fixed in `packages/illustrations`, and a unit test now rejects duplicate attributes in every generated SVG; the old code fails that test. |
+
+While recording, switching tabs in the release build took 3–4 s on the emulator (with screen recording and UI automation running at the same time). This wasn't investigated further; earlier measurements without the recorder are in the APK section above.
 
 ## Not tested
 

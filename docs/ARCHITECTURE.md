@@ -51,7 +51,8 @@ NextStep is a **modular monolith**: one API process, one database, two clients, 
 ## Website (`apps/web`)
 
 - **Next.js 16** App Router, all pages statically prerendered, CSS Modules on top of the generated design tokens, Lucide icons, `next/font` for Bricolage Grotesque + Plus Jakarta Sans.
-- **Browser demo** (`/demo`): a client-only app using the same engine/scheduler/gamification packages, with fictional data, a simulated Lagos clock, `localStorage` persistence and a reset button. It never talks to the API.
+- **Demo video** (`/demo`): a narrated walkthrough of the real Android app, built from emulator footage with the Remotion project in `video/` (see its README).
+- **Browser demo** (`/demo/interactive`): a client-only app using the same engine/scheduler/gamification packages, with fictional data, a simulated Lagos clock, `localStorage` persistence and a reset button. It never talks to the API.
 
 ## Key decisions
 

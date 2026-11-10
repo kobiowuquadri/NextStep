@@ -24,7 +24,8 @@ export const nav = [
 ] as const;
 
 export const footerNav = [
-  { href: '/demo', label: 'Try the demo' },
+  { href: '/demo', label: 'Watch the demo' },
+  { href: '/demo/interactive', label: 'Interactive demo' },
   { href: '/how-it-works', label: 'How it works' },
   { href: '/features', label: 'Features' },
   { href: '/community', label: 'Community & accessibility' },

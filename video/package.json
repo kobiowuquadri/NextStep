@@ -1,0 +1,24 @@
+{
+  "name": "nextstep-video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The NextStep walkthrough video: real app footage, motion graphics and a synthetic narration voice. Rendered with Remotion.",
+  "type": "module",
+  "scripts": {
+    "art": "node scripts/make-art.mjs",
+    "footage": "node scripts/prepare-footage.mjs",
+    "studio": "remotion studio",
+    "render": "remotion render NextStepWalkthrough out/nextstep-walkthrough.mp4",
+    "still": "remotion still NextStepWalkthrough out/poster.png --frame=150"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.537",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "remotion": "4.0.537"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "typescript": "~6.0.3"
+  }
+}

@@ -35,6 +35,7 @@ Honest list of what NextStep does not do yet, what wasn’t verified, and trade-
 - **Conflict UI** covers important-field conflicts and duplicate plans; other concurrent edits merge automatically (last write wins per field).
 - **Sync payloads**: responses are gzip-compressed; request bodies (uploads) are not. Measured sizes are from localhost, not mobile networks.
 - **Expo Go vs release build**: most manual QA ran in Expo Go (development mode). The release APK was smoke-tested on the emulator (sample semester, offline restart, cold start, memory), but signing in on it needs an HTTPS API, which wasn’t available locally.
+- **Demo video is a snapshot**: it shows the app as recorded on 10 Nov 2026 on an emulator. Re-record it after visible UI changes (`video/README.md`). The narration is a synthetic US-English voice, disclosed on the page; there is no human voice-over or other language yet.
 - **Time handling**: the app uses the phone’s clock; a badly wrong device clock can mis-order actions locally (the server rejects XP events dated in the future).
 
 ## Claims we do not make

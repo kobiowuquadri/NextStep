@@ -8,3 +8,5 @@
 *.ico binary
 *.ttf binary
 *.woff2 binary
+*.mp4 binary
+*.wav binary

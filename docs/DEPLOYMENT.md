@@ -5,7 +5,7 @@ Nothing has been deployed or published by the development team: no hosting, doma
 ```
  Students' phones ──HTTPS──►  API container (Docker)  ──►  Managed PostgreSQL 15+
  Browsers ──HTTPS──► Website (Next.js, mostly static)        (backups, TLS)
-                     └ /demo runs entirely in the browser — no API, no account
+                     └ /demo (video) and /demo/interactive run without the API or an account
 ```
 
 | Component | Recommended target | What it needs |
@@ -98,7 +98,7 @@ Environment (all public — **never put secrets in `NEXT_PUBLIC_*`**):
 | `NEXT_PUBLIC_IOS_URL` | App Store listing, once it exists. |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | A real team contact address. Omitted from the site when empty. |
 
-While the download variables are empty the site states honestly that the app isn’t available to download yet and points to the browser demo. Rebuild after changing them (they are inlined at build time).
+While the download variables are empty the site states honestly that the app isn’t available to download yet and points to the demo video and the browser demo. Rebuild after changing them (they are inlined at build time).
 
 The browser demo needs no configuration: it uses fictional data and stores changes only in the visitor’s browser.
 

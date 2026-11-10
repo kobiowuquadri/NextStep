@@ -137,7 +137,7 @@ export default function HowItWorksPage() {
           ))}
         </div>
         <div className={styles.ctaRow}>
-          <ButtonLink href="/demo" size="lg">
+          <ButtonLink href="/demo/interactive" size="lg">
             Try Recovery Mode <ArrowRight size={20} aria-hidden />
           </ButtonLink>
         </div>

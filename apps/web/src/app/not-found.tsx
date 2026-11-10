@@ -12,7 +12,7 @@ export default function NotFound() {
           <span style={{ display: 'inline-flex', gap: 12, marginTop: 20, flexWrap: 'wrap' }}>
             <ButtonLink href="/">Go home</ButtonLink>
             <ButtonLink href="/demo" variant="secondary">
-              Try the demo
+              Watch the demo
             </ButtonLink>
           </span>
         </>

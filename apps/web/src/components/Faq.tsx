@@ -9,7 +9,7 @@ export interface FaqItem {
 export const FAQ: FaqItem[] = [
   {
     q: 'Is NextStep available to download?',
-    a: 'Not yet. The Android and iOS apps are not published in any app store yet; this site will link to real builds once Team Apex releases them. Meanwhile, the browser demo shows the core experience with fictional data.',
+    a: 'Not yet. The Android and iOS apps are not published in any app store yet; this site will link to real builds once Team Apex releases them. Meanwhile, the demo video shows the real Android app, and the interactive browser demo lets you try the core experience. Both use fictional data.',
   },
   {
     q: 'Does NextStep work without internet?',

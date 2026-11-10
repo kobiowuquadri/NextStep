@@ -28,6 +28,15 @@ Every visual and content asset in the repository, where it came from and its lic
 
 Each file is registered with its alt text in `apps/web/src/lib/screens.ts`. Re-capture after UI changes, so screenshots never show features that no longer match the product. The browser demo (`/demo`) is shown live on the site, not as screenshots.
 
+## Demo video
+
+| File(s) | Made from | Notes |
+|---|---|---|
+| `apps/web/public/video/nextstep-walkthrough.mp4` (+ poster `.jpg`, captions `.en.vtt`) | The Remotion project in `video/` | 1920×1080, H.264 + AAC. Shown on `/demo`. |
+| App footage inside the video | Screen recordings of the **release APK** on the Android emulator (fictional sample semester, 10 Nov 2026), made with the emulator's recorder (`video/scripts/record-android.mjs`) | Only trimmed, with the last frame held briefly at three cuts; app content not edited. Touch indicators from Android's "Show taps". |
+| Narration | Generated with **Kokoro** text-to-speech (Apache-2.0, voice `af_heart`), run offline (`video/scripts/tts.py`) | A **synthetic voice**, disclosed on the page and in the video. Checked by transcribing every line with Whisper (faster-whisper, `base.en`). |
+| Motion graphics | `video/src` (code-drawn) with the brand fonts, colours and the mascot/logo/badge SVGs from `packages/illustrations` | No stock footage, music or third-party artwork. |
+
 ## Fonts
 
 | Font | Licence | Use |

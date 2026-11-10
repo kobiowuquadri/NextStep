@@ -69,7 +69,7 @@ export default function AboutPage() {
         </p>
         <div className={styles.ctaRow}>
           <ButtonLink href="/demo" size="lg">
-            Try the demo <ArrowRight size={20} aria-hidden />
+            Watch the demo <ArrowRight size={20} aria-hidden />
           </ButtonLink>
         </div>
       </Section>

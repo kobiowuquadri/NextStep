@@ -1,0 +1,220 @@
+{
+  "fps": 30,
+  "scenes": [
+    {
+      "id": "intro",
+      "kind": "intro",
+      "seconds": 6.0,
+      "voice": [
+        {
+          "id": "intro",
+          "at": 0.6
+        }
+      ]
+    },
+    {
+      "id": "tobi",
+      "kind": "tobi",
+      "seconds": 7.6,
+      "voice": [
+        {
+          "id": "tobi",
+          "at": 0.5
+        }
+      ]
+    },
+    {
+      "id": "today",
+      "kind": "phone",
+      "chapter": 0,
+      "eyebrow": "Today",
+      "title": [
+        "Only what’s",
+        "realistic."
+      ],
+      "sub": "The next session, and why it matters.",
+      "clips": [
+        "today"
+      ],
+      "voice": [
+        {
+          "id": "today",
+          "at": 1.1
+        }
+      ]
+    },
+    {
+      "id": "recover",
+      "kind": "phone",
+      "chapter": 1,
+      "eyebrow": "Recovery Mode",
+      "title": [
+        "Plans changed?",
+        "Tap once."
+      ],
+      "sub": "Every change comes with a reason. Nothing moves until you accept.",
+      "clips": [
+        "rec-sheet",
+        "rec-time",
+        "rec-preview",
+        "rec-scroll",
+        "rec-accept"
+      ],
+      "voice": [
+        {
+          "id": "recover1",
+          "at": 0.3
+        },
+        {
+          "id": "recover2",
+          "at": 7.0
+        }
+      ],
+      "callouts": [
+        {
+          "at": 7.4,
+          "until": 15.6,
+          "tone": "calm",
+          "text": "Before → after, with a reason"
+        },
+        {
+          "at": 16.2,
+          "until": 19.8,
+          "tone": "reward",
+          "text": "You still have a next step"
+        }
+      ]
+    },
+    {
+      "id": "focus",
+      "kind": "phone",
+      "chapter": 2,
+      "eyebrow": "Focus",
+      "title": [
+        "One small",
+        "next step."
+      ],
+      "sub": "A timer saved as timestamps, so it survives app restarts.",
+      "clips": [
+        "focus-pick",
+        "focus-timer"
+      ],
+      "voice": [
+        {
+          "id": "focus",
+          "at": 1.2
+        }
+      ]
+    },
+    {
+      "id": "checkin",
+      "kind": "phone",
+      "chapter": 2,
+      "eyebrow": "Check-in",
+      "title": [
+        "What got done,",
+        "what’s left."
+      ],
+      "sub": "Your own sense of readiness, not a grade.",
+      "clips": [
+        "checkin-open",
+        "checkin-ready"
+      ],
+      "voice": [
+        {
+          "id": "checkin",
+          "at": 1.4
+        }
+      ]
+    },
+    {
+      "id": "badge",
+      "kind": "phone",
+      "chapter": 3,
+      "eyebrow": "Back on Track",
+      "title": [
+        "Earned once,",
+        "for real progress."
+      ],
+      "sub": "No points for busywork.",
+      "clips": [
+        "badge"
+      ],
+      "voice": [
+        {
+          "id": "badge",
+          "at": 0.8
+        }
+      ],
+      "badge": true
+    },
+    {
+      "id": "journey",
+      "kind": "phone",
+      "chapter": 3,
+      "eyebrow": "Journey",
+      "title": [
+        "A weekly rhythm,",
+        "not fragile streaks."
+      ],
+      "sub": "Missing a day never resets your progress.",
+      "clips": [
+        "journey"
+      ],
+      "voice": [
+        {
+          "id": "journey",
+          "at": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plan",
+      "kind": "phone",
+      "chapter": 4,
+      "eyebrow": "Plan",
+      "title": [
+        "A week that fits",
+        "your life."
+      ],
+      "sub": "Works offline after setup. Syncs when you reconnect.",
+      "clips": [
+        "plan-today",
+        "plan-wed",
+        "plan-tasks"
+      ],
+      "voice": [
+        {
+          "id": "plan",
+          "at": 0.9
+        }
+      ],
+      "callouts": [
+        {
+          "at": 4.6,
+          "until": 11.2,
+          "tone": "calm",
+          "text": "Works offline after setup"
+        }
+      ]
+    },
+    {
+      "id": "outro",
+      "kind": "outro",
+      "seconds": 7.0,
+      "voice": [
+        {
+          "id": "outro",
+          "at": 1.4
+        }
+      ]
+    }
+  ],
+  "chapters": [
+    "Today",
+    "Recover",
+    "Focus",
+    "Progress",
+    "Plan"
+  ]
+}
