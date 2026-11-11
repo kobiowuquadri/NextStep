@@ -15,6 +15,7 @@ Results below were produced on the development machine (Windows 11, Node 24, Chr
 | Production website build | `pnpm build:web` | **pass** — 15 static routes |
 | API production packaging (the Dockerfile’s steps, run without Docker) | `pnpm --filter @nextstep/api deploy --prod`, then `prisma migrate deploy` on an **empty** database and `node dist/main.js` with `NODE_ENV=production` | **pass** — migrations applied, reference data loaded on boot, `/health`, `/v1/resources` and registration worked; JSON logs contained no email, password or token |
 | Android release build | `gradlew assembleRelease` (local, debug-signed) | **pass** — 66.1 MB APK, installed and run on the emulator (see below); rebuilt on 9 Nov with the focus-timer and check-in fixes |
+| Tester APK against the live API (11 Nov) | EAS `preview` build (EAS-managed key), installed on the emulator; sign-up through the UI | **pass** — 113 MB APK (all four CPU types); bundle points at the live API, no sample semester. Server asleep at the start: the "waking up" message showed after 5 s, sign-up finished in 26 s, onboarding completed, Profile showed *Synced*. Test account deleted afterwards (204, then login 401) |
 
 No test was skipped or marked as expected-to-fail. The Docker image itself was not built (Docker wasn’t running on this machine).
 
