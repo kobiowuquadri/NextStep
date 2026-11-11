@@ -32,7 +32,7 @@ Mapped to the sections of the product brief. ✅ done and tested (automated or m
 |---|---|---|
 | §4 Illustrations, mascot, motion | ✅ | Code-drawn SVG; reduced motion respected; sound off by default |
 | §7 Five tabs and all listed screens | ✅ | Every listed screen exists; empty/offline/error states on the main screens (see limitations for gaps) |
-| §8 Onboarding | ✅ | 6 skippable steps; manual school/course entry; fictional sample semester |
+| §8 Onboarding | ✅ | 6 skippable steps; manual school/course entry. The fictional sample semester was removed from the app for real testers (11 Nov); it stays in the website demo |
 | §9 Tasks | ✅ | All listed fields incl. dependencies, subtasks, splittable, online-only, resources |
 | §10 Scheduling engine | ✅ | Deterministic, explained, shortfall options; manual/hybrid planning |
 | §11 Recovery Mode | ✅ | 5 change types, before/after with reasons, accept/adjust/keep, stale-preview protection, undo |

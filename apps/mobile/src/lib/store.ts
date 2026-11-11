@@ -5,7 +5,6 @@ import * as SecureStore from 'expo-secure-store';
 import NetInfo from '@react-native-community/netinfo';
 import { create } from 'zustand';
 import { localDateKey, type AuthResponse, type SyncConflict } from '@nextstep/contracts';
-import { buildTobiScenario } from '@nextstep/demo-data';
 import {
   applyMutations,
   emptyState,
@@ -19,14 +18,14 @@ import {
   type Mutation,
 } from '@nextstep/engine';
 import type { AchievementDef } from '@nextstep/gamification';
-import { ApiError, authedRequest, NetworkError, publicRequest, tokenStore } from './api';
+import { ApiError, authedRequest, NetworkError, publicRequest, tokenStore, wakeServer } from './api';
 import { deleteAccountDb, getMeta, openAccountDb, setMeta, type Db } from './db';
 import { rescheduleReminders, scheduleFocusEnd, cancelNotification, configureNotifications } from './notifications';
 import { loadState, pendingCount, persist, replaceAll } from './repo';
 import { backoffMs, isTransient, syncOnce } from './sync';
 import { backToFocus, focusMs, newTimer, pause, resume, startBreak, type FocusTimer } from './timer';
 
-export type AccountMode = 'user' | 'guest' | 'demo';
+export type AccountMode = 'user' | 'guest';
 export interface Account {
   mode: AccountMode;
   userId: string;
@@ -59,7 +58,6 @@ interface Store {
   signUp(input: { email: string; password: string; displayName: string; timezone: string }): Promise<void>;
   signIn(email: string, password: string): Promise<void>;
   startGuest(displayName: string, timezone: string): Promise<void>;
-  startDemo(): Promise<void>;
   signOut(opts?: { discardUnsynced?: boolean }): Promise<{ ok: true } | { ok: false; pending: number }>;
   deleteAccount(password: string): Promise<void>;
   retryFirstSync(): Promise<void>;
@@ -155,6 +153,7 @@ export const useApp = create<Store>((set, get) => {
     online: true,
 
     async boot() {
+      wakeServer();
       await configureNotifications().catch(() => undefined);
       let deviceId = await SecureStore.getItemAsync(DEVICE_KEY);
       if (!deviceId) {
@@ -201,11 +200,6 @@ export const useApp = create<Store>((set, get) => {
     async startGuest(displayName, timezone) {
       const userId = Crypto.randomUUID();
       await openFor({ mode: 'guest', userId, displayName }, (id) => emptyState(id, newPreferences(id, displayName, timezone, Date.now())));
-    },
-
-    async startDemo() {
-      // Fictional sample semester; local only, never synced.
-      await openFor({ mode: 'demo', userId: 'demo-tobi', displayName: 'Tobi (sample)' }, () => buildTobiScenario(Date.now()));
     },
 
     async signOut(opts = {}) {

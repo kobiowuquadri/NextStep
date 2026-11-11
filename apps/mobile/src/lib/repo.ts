@@ -90,7 +90,7 @@ export async function persist(db: Db, mutations: Mutation[], opts: PersistOption
   });
 }
 
-/** Write a whole state (used to seed the guest/demo account). */
+/** Write a whole state (used to seed a new guest account). */
 export async function replaceAll(db: Db, state: AppState): Promise<void> {
   await db.withExclusiveTransactionAsync(async (txn) => {
     await txn.runAsync('DELETE FROM records');

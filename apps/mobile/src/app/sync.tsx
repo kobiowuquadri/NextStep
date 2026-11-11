@@ -36,7 +36,7 @@ export default function SyncScreen() {
     return (
       <Screen>
         <T variant="h1">Sync</T>
-        <Notice>{account.mode === 'demo' ? 'The sample semester is fictional and stays on this phone.' : 'Guest mode keeps everything on this phone. Create an account to back up and sync between devices.'}</Notice>
+        <Notice>Guest mode keeps everything on this phone. Create an account to back up and sync between devices.</Notice>
         <Button label="Back" variant="ghost" onPress={() => router.back()} />
       </Screen>
     );

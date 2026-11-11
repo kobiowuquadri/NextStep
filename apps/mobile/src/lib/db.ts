@@ -3,7 +3,7 @@ import * as SQLite from 'expo-sqlite';
 export type Db = SQLite.SQLiteDatabase;
 
 /**
- * One SQLite file per account ("guest", "demo" or a user id) so accounts on a
+ * One SQLite file per account ("guest" or a user id) so accounts on a
  * shared phone never see each other's data. Logging out deletes the file.
  */
 export const dbNameFor = (accountKey: string) => `nextstep-${accountKey.replace(/[^a-zA-Z0-9-]/g, '')}.db`;

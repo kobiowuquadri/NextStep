@@ -1,20 +1,26 @@
 {
   "cli": { "version": ">= 16.0.0", "appVersionSource": "remote" },
   "build": {
+    "base": {
+      "pnpm": "11.1.1"
+    },
     "development": {
+      "extends": "base",
       "developmentClient": true,
       "distribution": "internal",
       "env": { "EXPO_PUBLIC_API_URL": "http://10.0.2.2:4000" }
     },
     "preview": {
+      "extends": "base",
       "distribution": "internal",
       "android": { "buildType": "apk" },
-      "env": { "EXPO_PUBLIC_API_URL": "https://api.your-domain.example", "EXPO_PUBLIC_SITE_URL": "https://your-domain.example" }
+      "env": { "EXPO_PUBLIC_API_URL": "https://nextstep-1nuf.onrender.com", "EXPO_PUBLIC_SITE_URL": "https://nextstep-two-sandy.vercel.app" }
     },
     "production": {
+      "extends": "base",
       "autoIncrement": true,
       "android": { "buildType": "app-bundle" },
-      "env": { "EXPO_PUBLIC_API_URL": "https://api.your-domain.example", "EXPO_PUBLIC_SITE_URL": "https://your-domain.example" }
+      "env": { "EXPO_PUBLIC_API_URL": "https://nextstep-1nuf.onrender.com", "EXPO_PUBLIC_SITE_URL": "https://nextstep-two-sandy.vercel.app" }
     }
   },
   "submit": { "production": {} }

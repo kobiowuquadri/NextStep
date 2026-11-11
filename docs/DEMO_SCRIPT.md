@@ -48,7 +48,7 @@ Show the shortfall message and the options: reduce scope, defer a lower-priority
 
 ## 4:10 — Offline and the phone (40 s)
 
-On Android (sample semester or a signed-in account):
+On Android (a signed-in account, set up before the demo):
 
 - Turn on airplane mode → edit a task, accept a recovery → the header shows *changes waiting*.
 - Force-close and reopen the app: everything is still there; the focus timer kept running.
@@ -63,7 +63,7 @@ If no phone is available, show the **On Android** screenshots on `/features` (ca
 ## If something goes wrong
 
 - Demo in a strange state → **Reset demo** (top of `/demo/interactive`).
-- No internet at the venue → the website demo and the phone app’s sample semester work fully offline once loaded.
+- No internet at the venue → the website demo works fully offline once loaded, and the phone app keeps working offline with the account you signed in to beforehand (changes sync later).
 - AI features are optional and off without a server key — don’t demo them unless a key is configured.
 
 ## Claims to avoid

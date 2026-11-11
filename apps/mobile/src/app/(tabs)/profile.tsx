@@ -27,7 +27,7 @@ export default function Profile() {
         <Card style={{ flex: 1 }} flat>
           <T variant="h2">{prefs.displayName}</T>
           <T variant="small" color="textMuted">
-            {account.mode === 'user' ? account.email : account.mode === 'demo' ? 'Sample semester (fictional)' : 'Guest on this phone'}
+            {account.mode === 'user' ? account.email : 'Guest on this phone'}
           </T>
           <T variant="caption" color="textMuted">
             {prefs.timezone}

@@ -15,7 +15,7 @@ export function SyncBadge() {
   let color = c.successText;
   if (account.mode !== 'user') {
     Icon = HardDrive;
-    text = account.mode === 'demo' ? 'Sample data · on this phone' : 'Saved on this phone';
+    text = 'Saved on this phone';
     color = c.textMuted;
   } else if (sync.status === 'syncing') {
     Icon = RefreshCw;

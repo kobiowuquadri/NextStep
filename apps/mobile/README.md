@@ -13,7 +13,9 @@ cp apps/mobile/.env.example apps/mobile/.env  # EXPO_PUBLIC_API_URL (Android emu
 pnpm dev:mobile                               # press "a" for Android, or scan the QR code in Expo Go
 ```
 
-The **sample semester** and **guest mode** work without the API. Signing in and syncing need the API running (`pnpm dev:api`).
+**Guest mode** works without the API. Signing in and syncing need the API running (`pnpm dev:api`).
+
+Tester APK (talks to the live API set in `eas.json`): `npx eas-cli@latest build --platform android --profile preview`. The signing key is stored on EAS, so later builds install as updates.
 
 Only public `EXPO_PUBLIC_*` values belong in `.env`; they are bundled into the app. Never put secrets there.
 

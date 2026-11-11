@@ -71,7 +71,7 @@ cp apps/mobile/.env.example apps/mobile/.env   # EXPO_PUBLIC_API_URL (emulator: 
 pnpm dev:mobile                          # then press "a" for Android, or scan the QR code in Expo Go
 ```
 
-The website demo and the mobile **sample semester** / **guest mode** need no API at all.
+The website demo and the mobile app's **guest mode** need no API at all. The tester APK talks to the live API (`apps/mobile/eas.json`, `preview` profile).
 
 ## Tests
 

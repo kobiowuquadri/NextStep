@@ -63,14 +63,6 @@ export default function Today() {
         <Mascot pose={d.today.completedForToday ? 'celebrate' : 'welcome'} skin={prefs.mascotSkin} accessory={prefs.mascotAccessory} size={78} />
       </Row>
 
-      {account?.mode === 'demo' && (
-        <Card tone="reward" flat>
-          <T variant="small" weight="700">
-            Sample semester · Tobi is fictional. Nothing here is real student data.
-          </T>
-        </Card>
-      )}
-
       <Card
         tone="reward"
         onPress={() => router.push('/(tabs)/journey')}

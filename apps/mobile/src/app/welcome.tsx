@@ -20,7 +20,7 @@ export default function Welcome() {
   const [guest, setGuest] = useState(false);
   const [name, setName] = useState('');
   const [busy, setBusy] = useState(false);
-  const { startGuest, startDemo } = useApp();
+  const { startGuest } = useApp();
   const s = SLIDES[slide]!;
 
   return (
@@ -81,15 +81,6 @@ export default function Welcome() {
           <Button label="Create an account" onPress={() => router.push('/auth/sign-up')} />
           <Button label="I have an account" variant="secondary" onPress={() => router.push('/auth/sign-in')} />
           <Button label="Continue as guest" variant="ghost" onPress={() => setGuest(true)} accessibilityHint="Use NextStep on this phone without an account" />
-          <Card tone="reward" onPress={async () => {
-            await startDemo();
-            router.replace('/(tabs)');
-          }} accessibilityLabel="Explore a fictional sample semester">
-            <T variant="bodyStrong">Explore a sample semester</T>
-            <T variant="small" color="textSecondary">
-              See Tobi’s week — a fictional student who works part-time. Sample data stays on this phone.
-            </T>
-          </Card>
         </View>
       )}
     </Screen>

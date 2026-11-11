@@ -35,13 +35,13 @@ export default function Privacy() {
 
   const doSignOut = async () => {
     if (account.mode !== 'user') {
-      // Guest and sample data exist only on this phone, so leaving is destructive: confirm first.
+      // Guest data exists only on this phone, so leaving is destructive: confirm first.
       Alert.alert(
-        account.mode === 'demo' ? 'Leave the sample semester?' : 'Leave guest mode?',
-        account.mode === 'demo' ? 'The fictional sample data on this phone will be removed.' : 'Everything you added in guest mode is stored only on this phone and will be deleted. Export it first if you want a copy.',
+        'Leave guest mode?',
+        'Everything you added in guest mode is stored only on this phone and will be deleted. Export it first if you want a copy.',
         [
           { text: 'Cancel', style: 'cancel' },
-          { text: account.mode === 'demo' ? 'Leave' : 'Delete and leave', style: 'destructive', onPress: async () => { await signOut(); router.replace('/welcome'); } },
+          { text: 'Delete and leave', style: 'destructive', onPress: async () => { await signOut(); router.replace('/welcome'); } },
         ],
       );
       return;
@@ -71,10 +71,10 @@ export default function Privacy() {
       {error && <Notice tone="danger">{error}</Notice>}
       <SectionLabel>Your data</SectionLabel>
       <Button label="Export my data (JSON)" variant="secondary" loading={busy} onPress={() => void exportData()} />
-      {account.mode !== 'user' && <Notice>Guest and sample data live only on this phone. Signing out deletes it.</Notice>}
+      {account.mode !== 'user' && <Notice>Guest data lives only on this phone. Leaving guest mode deletes it.</Notice>}
 
       <SectionLabel>Session</SectionLabel>
-      <Button label={account.mode === 'user' ? 'Sign out' : account.mode === 'demo' ? 'Leave the sample semester' : 'Leave guest mode (deletes data)'} variant="ink" onPress={() => void doSignOut()} />
+      <Button label={account.mode === 'user' ? 'Sign out' : 'Leave guest mode (deletes data)'} variant="ink" onPress={() => void doSignOut()} />
 
       {account.mode === 'user' && (
         <Card tone="danger">

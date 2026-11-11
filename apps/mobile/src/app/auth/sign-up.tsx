@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { useApp } from '../../lib/store';
 import { Button, Card, Field, Notice, Screen, T } from '../../ui/kit';
 import { authErrorMessage, deviceTimezone } from '../../lib/format';
+import { useSlow } from '../../lib/useSlow';
 
 export default function SignUp() {
   const signUp = useApp((s) => s.signUp);
@@ -12,6 +13,7 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const slow = useSlow(busy);
   const tooShort = password.length > 0 && password.length < 10;
   return (
     <Screen>
@@ -19,6 +21,7 @@ export default function SignUp() {
       <T color="textSecondary">An account backs up your plan and syncs between devices. We only ask for what planning needs.</T>
       <Card>
         {error && <Notice tone="danger">{error}</Notice>}
+        {slow && <Notice>Waking up the NextStep server. After a quiet spell this can take up to a minute.</Notice>}
         <Field label="Display name" value={name} onChangeText={setName} maxLength={60} autoComplete="name" />
         <Field label="Email" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" autoComplete="email" />
         <Field label="Password" value={password} onChangeText={setPassword} secureTextEntry autoComplete="new-password" error={tooShort ? 'Use at least 10 characters — a short phrase works well.' : null} hint="At least 10 characters. A phrase like “bus to campus at seven” is strong and memorable." />

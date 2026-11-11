@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 import { useApp } from '../../lib/store';
 import { authErrorMessage } from '../../lib/format';
+import { useSlow } from '../../lib/useSlow';
 import { Button, Card, Field, Mascot, Notice, Screen, T } from '../../ui/kit';
 
 export default function SignIn() {
@@ -10,12 +11,14 @@ export default function SignIn() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const slow = useSlow(busy);
   return (
     <Screen>
       <Mascot pose="welcome" size={80} />
       <T variant="h1">Welcome back</T>
       <Card>
         {error && <Notice tone="danger">{error}</Notice>}
+        {slow && <Notice>Waking up the NextStep server. After a quiet spell this can take up to a minute.</Notice>}
         <Field label="Email" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" autoComplete="email" textContentType="emailAddress" />
         <Field label="Password" value={password} onChangeText={setPassword} secureTextEntry autoComplete="current-password" textContentType="password" />
         <Button

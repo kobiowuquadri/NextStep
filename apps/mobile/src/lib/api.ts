@@ -60,8 +60,19 @@ async function parse<T>(res: Response): Promise<T> {
   return body as T;
 }
 
+/**
+ * A server on a free host sleeps when idle and needs up to about a minute to wake, so sign-up,
+ * sign-in and password reset wait longer than other requests.
+ */
+const PUBLIC_TIMEOUT_MS = 75_000;
+
 export async function publicRequest<T>(method: string, path: string, body?: unknown): Promise<T> {
-  return parse<T>(await raw(path, { method, body: body === undefined ? undefined : JSON.stringify(body) }));
+  return parse<T>(await raw(path, { method, timeoutMs: PUBLIC_TIMEOUT_MS, body: body === undefined ? undefined : JSON.stringify(body) }));
+}
+
+/** Starts waking the server while the person is still on the welcome or sign-in screen. Never throws. */
+export function wakeServer(): void {
+  void raw('/health', { method: 'GET', timeoutMs: PUBLIC_TIMEOUT_MS }).catch(() => undefined);
 }
 
 let refreshing: Promise<Tokens> | null = null;
