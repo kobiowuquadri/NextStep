@@ -54,6 +54,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "expo lint",
+    "eas-build-post-install": "pnpm --filter \"@nextstep/mobile^...\" run build",
     "build:apk:local": "expo prebuild --platform android --clean && cd android && gradlew assembleRelease"
   },
   "private": true
