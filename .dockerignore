@@ -1,0 +1,15 @@
+# The API image (apps/api/Dockerfile) builds from the repository root and needs only the root
+# manifests, packages/ and apps/api/. Keep local installs, build output and secrets out of it.
+**/node_modules
+**/dist
+**/.turbo
+**/.env
+**/.env.*
+!**/.env.example
+apps/api/src/generated
+apps/api/.pgdata
+apps/mobile
+apps/web
+video
+docs
+.git
