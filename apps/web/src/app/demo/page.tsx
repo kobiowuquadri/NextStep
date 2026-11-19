@@ -34,7 +34,7 @@ export default function DemoVideoPage() {
               See NextStep <span className={styles.accent}>in action.</span>
             </h1>
             <p className={`${styles.lead} rise`} style={{ ['--d' as string]: 2 }}>
-              A {length} walkthrough of the real Android app. Quadri’s plans change, Recovery Mode rebuilds the week, and one small next step gets done.
+              A {length} walkthrough of the real Android app. A student’s plans change, Recovery Mode rebuilds the week, and one small next step gets done.
             </p>
           </div>
           <div className={`${styles.stage} rise`} style={{ ['--d' as string]: 3 }}>
@@ -81,7 +81,7 @@ export default function DemoVideoPage() {
               </li>
               <li>
                 <MousePointerClick aria-hidden />{' '}
-                <span>Quadri and the sample semester are fictional, loaded into a temporary test account. No real student data appears.</span>
+                <span>The student and the sample semester in the video are fictional. No real student data appears.</span>
               </li>
               <li>
                 <Volume2 aria-hidden />{' '}

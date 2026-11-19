@@ -43,7 +43,7 @@ test.describe('website', () => {
     for (const path of PAGES) {
       await page.goto(path);
       await expect(page.locator('a[href*="/demo/interactive"]')).toHaveCount(0);
-      expect(await page.locator('body').innerText(), path).not.toMatch(/interactive demo|Tobi/i);
+      expect(await page.locator('body').innerText(), path).not.toMatch(/interactive demo/i);
     }
   });
 
@@ -142,11 +142,9 @@ test.describe('website', () => {
     const vtt = await request.get((await track.getAttribute('src'))!);
     const captions = await vtt.text();
     expect(captions).toMatch(/^WEBVTT/);
-    expect(captions).toContain('Quadri');
-    expect(captions).not.toContain('Tobi');
     await expect(page.getByText(/synthetic voice/).first()).toBeVisible();
     await page.getByText('Read the transcript').click();
-    await expect(page.getByText(/Quadri/).first()).toBeVisible();
+    await expect(page.getByText(/Recovery Mode, and focus all work offline after setup/)).toBeVisible();
     // Playwright's bundled Chromium has no H.264 decoder; real Chrome (E2E_CHANNEL=chrome) does.
     const h264 = await video.evaluate((v: HTMLVideoElement) => v.canPlayType('video/mp4; codecs="avc1.640028"') !== '');
     if (h264) {

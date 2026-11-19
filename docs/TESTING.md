@@ -1,6 +1,6 @@
 # Testing, measurements and QA
 
-Results below were produced on the development machine (Windows 11, Node 24, Chrome stable, Android Emulator with an Android 16 / API 36 x86_64 image) on **9 November 2026**. Commands to reproduce are listed with each section.
+Results below were produced on the development machine (Windows 11, Node 24, Chrome stable, Android Emulator with an Android 16 / API 36 x86_64 image) on **9 November 2026**, and re-run for release 1.1.0 on **19 November 2026** (see [Release 1.1.0](#release-110-19-nov-2026)). Commands to reproduce are listed with each section.
 
 ## Summary
 
@@ -8,14 +8,16 @@ Results below were produced on the development machine (Windows 11, Node 24, Chr
 |---|---|---|
 | Shared packages (unit) | `pnpm test:packages` | **95 passed** (7 packages) |
 | API + offline sync (integration, real PostgreSQL) | `pnpm test:api` | **42 passed** (4 files) |
-| Website, demo video page + browser demo (e2e, desktop Chrome and Pixel 7 emulation) | `pnpm build:web && pnpm test:web` | **50 passed** |
+| Website e2e (desktop Chrome and Pixel 7 emulation; the browser demo and its tests were removed in 1.1.0) | `pnpm build:web && pnpm test:web` | **40 passed** (19 Nov) |
 | Demo video (narration, captions, audio) | Whisper transcription of every line and of the final soundtrack; loudness and clipping check | **pass** — see [Demo video](#demo-video) |
 | Type checks | `pnpm typecheck` / `tsc --noEmit` in mobile and API | **pass** |
-| Secret scan of client code and built bundles | `pnpm check:secrets` | **pass** — 153 client files scanned |
-| Production website build | `pnpm build:web` | **pass** — 15 static routes |
+| Secret scan of client code and built bundles | `pnpm check:secrets` | **pass** — 146 client files scanned (19 Nov) |
+| Production website build | `pnpm build:web` | **pass** — 14 static routes (19 Nov) |
 | API production packaging (the Dockerfile’s steps, run without Docker) | `pnpm --filter @nextstep/api deploy --prod`, then `prisma migrate deploy` on an **empty** database and `node dist/main.js` with `NODE_ENV=production` | **pass** — migrations applied, reference data loaded on boot, `/health`, `/v1/resources` and registration worked; JSON logs contained no email, password or token |
 | Android release build | `gradlew assembleRelease` (local, debug-signed) | **pass** — 66.1 MB APK, installed and run on the emulator (see below); rebuilt on 9 Nov with the focus-timer and check-in fixes |
 | Tester APK against the live API (11 Nov) | EAS `preview` build (EAS-managed key), installed on the emulator; sign-up through the UI | **pass** — 113 MB APK (all four CPU types); bundle points at the live API, no sample semester. Server asleep at the start: the "waking up" message showed after 5 s, sign-up finished in 26 s, onboarding completed, Profile showed *Synced*. Test account deleted afterwards (204, then login 401) |
+
+| Android APK 1.1.0 (19 Nov) | EAS `preview` build 89e4722f, checked with `aapt2`/`apksigner` and on the emulator | **pass** — see [Release 1.1.0](#release-110-19-nov-2026) |
 
 No test was skipped or marked as expected-to-fail. The Docker image itself was not built (Docker wasn’t running on this machine).
 
@@ -46,20 +48,22 @@ No test was skipped or marked as expected-to-fail. The Docker image itself was n
 - **Mobile sync (real mobile modules)**: `mobile-sync.test.ts` runs the app’s own `db`, `repo`, `sync` and `api` modules on Node’s SQLite against the real API: first sync then offline edits that persist through a simulated restart and sync once without duplicates; a push whose response is lost is retried safely; two phones with concurrent deadline edits keep both versions for the student and deletions stay deleted; duplicate plan generation on two phones doesn’t duplicate sessions; offline XP confirmed once across phones; accounts isolated on a shared phone and local data deleted on sign-out.
 - **AI (stubbed provider, no network)**: student text can’t break out of its data block; every field of an AI draft is validated and clamped; refusals and provider errors fall back with `AI_UNAVAILABLE`; the daily limit is enforced before calling the provider.
 
-## End-to-end tests — website and demo (50 = 25 × 2 viewports)
+## End-to-end tests — website (40 = 20 × 2 viewports, 19 Nov)
 
 `apps/web/e2e/site.spec.ts` against the production build (`next start`), on desktop Chrome and Pixel 7 emulation:
 
 - All 9 pages return 200, have exactly one `h1`, no console errors or uncaught page errors, and no horizontal scrolling.
-- Primary and secondary CTAs; every internal link resolves; honest “not published yet” message instead of store badges; sitemap and robots.
+- Calls to action: *Watch the demo* opens `/demo` with the video; the header's *Get the app* lands on the download section. Every internal link on the home and demo pages resolves; sitemap and robots exist (the sitemap no longer lists `/demo/interactive`).
+- The interactive demo is gone: `/demo/interactive` returns 404 and no page links to or mentions it.
+- Download: on the home and demo pages the *Download Android APK* button links to `release.json`'s file with a `download` attribute, shows the version, the install steps are next to the video, and the APK is served with `application/vnd.android.package-archive` and the exact byte size. (Skipped while no APK is published.)
 - Reset-password page shows the code from the URL fragment, handles a missing code and is `noindex`.
 - Features page shows at least 20 real app screenshots; every one loads and has alt text.
 - Home hero slideshow: the pause button works and a screen can be chosen by hand.
 - Scroll reveals: motion is on and a section heading is revealed when scrolled into view.
 - With reduced motion: motion stays off, nothing is hidden, and the slideshow starts paused.
-- `/demo` video page: the MP4 is served as `video/mp4`, preloads metadata only, has a poster and an English captions track on by default (valid WebVTT), discloses the synthetic voice and shows the transcript. In Chrome the video loads (over 60 s long) and a chapter button seeks to Recovery Mode. These playback checks are skipped, with a note, in browsers without an H.264 decoder (Playwright's bundled Chromium); here they ran on both viewports.
-- Pages now include `/demo/interactive`, and the browser-demo tests run there.
-- Demo: less time → accept → next step → Back on Track once; “Keep my current plan” changes nothing; add a task + mark a missed session + reset restores the original state; overloaded week explains the shortfall; the recovery sheet is keyboard-accessible and closes with Escape.
+- `/demo` video: the MP4 is served as `video/mp4`, preloads metadata only, has a poster and an English captions track on by default (valid WebVTT), discloses the synthetic voice and shows the transcript. In Chrome the video loads (over 60 s long) and a chapter button seeks to Recovery Mode; these playback checks are skipped, with a note, in browsers without an H.264 decoder.
+
+A layout review script also screenshotted every page at 1440 px and 390 px and flagged tap targets under 44 px, off-screen elements and over-long lines; the issues it found (footer links, theme toggle and slideshow buttons at 40 px, uneven footer columns, phone hero buttons of different widths, a 140-character line) were fixed.
 
 ## Manual QA on the Android emulator
 
@@ -152,6 +156,35 @@ The `/demo` walkthrough (`video/`, rendered with Remotion; 93.7 s, 1920×1080, 1
 | Every frame renders | ✅ 2,809 frames rendered without errors. The badge artwork failed to load as an image at first: `badgeSvg()` emitted duplicate `stroke-width` attributes, which is invalid XML (browsers tolerate it inline). This is fixed in `packages/illustrations`, and a unit test now rejects duplicate attributes in every generated SVG; the old code fails that test. |
 
 While recording, switching tabs in the release build took 3–4 s on the emulator (with screen recording and UI automation running at the same time). This wasn't investigated further; earlier measurements without the recorder are in the APK section above.
+
+## Release 1.1.0 (19 Nov 2026)
+
+**The APK** (`apps/web/public/downloads/NextStep-1.1.0.apk`, EAS build `89e4722f`):
+
+| Check | Result |
+|---|---|
+| Package, version | `com.teamapex.nextstep`, versionName 1.1.0, versionCode 2, minSdk 24 (Android 7.0), targetSdk 36 |
+| Size and CPU types | 56.4 MB; `arm64-v8a` and `armeabi-v7a` only (phones), 29 native libraries each |
+| Signature | APK Signature Scheme v2 verifies; certificate SHA-256 `97b64abe…0b12a` — the same EAS key as 1.0.0, so it installs as an update |
+| Native code | All 58 native libraries are byte-identical to 1.0.0 (SHA-256 compared). Only the JavaScript bundle changed |
+| Backend configuration | The bundle contains `https://nextstep-1nuf.onrender.com` and `https://nextstep-two-sandy.vercel.app`, no `10.0.2.2`/`localhost` |
+| Secrets | None found in the bundle (searched for JWT/database/SMTP/AI key names, `postgresql://`, `sk-ant-`, private keys, `neon.tech`) |
+| File on the website | SHA-256 `65f2c943…13b9f`, served as `application/vnd.android.package-archive`, size checked by the e2e test |
+
+**On the emulator.** The x86_64 emulator image can't start this ARM-only APK: it translates ARM code, and its translator could not load the uncompressed native libraries from inside the APK (`couldn't find DSO to load: libreactnative.so`). Real ARM phones load them directly. Because the native code is identical to 1.0.0, the 1.1.0 **JavaScript bundle** was tested inside a copy of the 1.0.0 APK (which includes x86_64 libraries), re-signed with the local debug key for the emulator only — that copy was never published.
+
+| Flow | Result |
+|---|---|
+| Update over 1.0.0 | A guest account made in 1.0.0 opened in 1.1.0 with its name, level and XP intact (the real 1.1.0 APK also installed over 1.0.0 with `adb install -r`: same signer, higher versionCode) |
+| Sign-up (live API) | Keyboard *Next* moved name → email → password; the form stayed above the keyboard; show/hide password worked; account created in 8 s |
+| Onboarding | Timezone dropdown: search “acc” → Accra, then back to Lagos. School suggestions filtered while typing (“Lag” → 3 schools). Course suggestion + code saved with *Save course and continue* (code upper-cased). Task: type, course, suggested title with the course code, date/time rows opened on the selected values, effort +15 min → 2 h 15 min, saved. Study time: From 22:00 moved To from 21:30 to 23:00 automatically. Commitment saved; plan built |
+| Today / Plan | *Synced* badge; next session shown. Tapping a session opened the action sheet with all four actions; *Pin this time* pinned it |
+| Recovery Mode | Less time → 45 min → proposal → *Accept changes* → “You still have a next step” |
+| Focus and check-in | Timer counted down; check-in pre-filled work left (2 h 14 min), *1 h* chip, hint “Was 2 h 15 min…”; saved; Back on Track unlocked |
+| Journey, Preferences | Level and XP shown; name edited in Preferences → Profile updated |
+| Task editor | Title suggestions; effort picker; a step typed but not added was kept on save |
+| Account deletion | In-app deletion with the password field → back to Welcome; login afterwards **401** |
+| Crashes | None in the crash log during the session |
 
 ## Not tested
 

@@ -1,10 +1,10 @@
 {
-  "available": false,
+  "available": true,
   "version": "1.1.0",
-  "versionCode": 0,
-  "file": "",
-  "bytes": 0,
-  "sha256": "",
-  "minAndroid": "",
-  "published": ""
+  "versionCode": 2,
+  "file": "/downloads/NextStep-1.1.0.apk",
+  "bytes": 56353356,
+  "sha256": "65f2c943596bfd46aaaced9ee42629864d50e0554af4c1f003ab4db551313b9f",
+  "minAndroid": "7.0",
+  "published": "2026-11-19"
 }

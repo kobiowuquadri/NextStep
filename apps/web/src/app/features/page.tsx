@@ -89,7 +89,7 @@ export default function FeaturesPage() {
       <PageHero
         eyebrow="Explore the app"
         title="Built around your next step."
-        intro="The NextStep mobile app (Android first, then iOS) works offline after setup and syncs when you reconnect. Every screen on this page is captured from the Android release build with Quadri’s fictional sample semester — not a mock-up."
+        intro="The NextStep mobile app (Android first, then iOS) works offline after setup and syncs when you reconnect. Every screen on this page is captured from the Android release build with a fictional sample semester — not a mock-up."
         art={<Art svg={mascotSvg({ pose: 'welcome', accessory: 'backpack' })} />}
       />
       <Section>

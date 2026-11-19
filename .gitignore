@@ -28,6 +28,8 @@ test-results/
 *.keystore
 *.jks
 *.mobileprovision
+# Temporary sample-account credentials (apps/api/scripts/sample-account.ts)
+demo-account.json
 google-services.json
 GoogleService-Info.plist
 

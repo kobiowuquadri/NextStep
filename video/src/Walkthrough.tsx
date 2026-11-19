@@ -4,7 +4,7 @@ import { Background } from './parts/Background';
 import { Headline } from './parts/Headline';
 import { BadgeBurst, Callout, ChapterBar } from './parts/Overlays';
 import { PhoneStage } from './parts/PhoneStage';
-import { Intro, Outro, Quadri } from './parts/Scenes';
+import { Intro, Outro, Tobi } from './parts/Scenes';
 import { loadFonts } from './theme';
 
 loadFonts();
@@ -44,10 +44,10 @@ export const Walkthrough = () => (
             <Intro duration={s.frames} />
           </Sequence>
         );
-      if (s.kind === 'quadri')
+      if (s.kind === 'tobi')
         return (
           <Sequence key={s.id} from={s.start} durationInFrames={s.frames}>
-            <Quadri duration={s.frames} />
+            <Tobi duration={s.frames} />
           </Sequence>
         );
       if (s.kind === 'outro')

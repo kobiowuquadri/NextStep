@@ -26,7 +26,7 @@ Every visual and content asset in the repository, where it came from and its lic
 |---|---|---|
 | `apps/web/public/screens/app/*.webp` — 24 screens: welcome, Today (before and after the day's session), Plan, Tasks, the Recovery flow (reasons, time, preview, choices), Back on Track badge, level up, Focus, check-in, Journey, badges, weekly reflection, resources, practice check, new task, profile, and four dark-theme screens | The locally built **release APK** of the NextStep Android app on an Android 16 emulator (1080×2400), using the fictional sample semester on 9 Nov 2026. Inputs shown in check-in, reflection and practice screens were entered by hand on the emulator. | `adb exec-out screencap`, resized to 720×1600 and saved as WebP (`node apps/web/scripts/capture-android.mjs <name>` repeats these steps for new captures). The status bar uses Android's SystemUI demo mode (full battery and Wi-Fi, no notification icons, clock set to the device time); the app content is not edited. |
 
-Each file is registered with its alt text in `apps/web/src/lib/screens.ts`. Re-capture after UI changes, so screenshots never show features that no longer match the product. The browser demo (`/demo`) is shown live on the site, not as screenshots.
+Each file is registered with its alt text in `apps/web/src/lib/screens.ts`. Re-capture after UI changes, so screenshots never show features that no longer match the product. These screenshots predate the 1.1.0 form changes and still show the fictional student under the old name, Tobi.
 
 ## Demo video
 

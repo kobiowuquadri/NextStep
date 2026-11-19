@@ -214,7 +214,7 @@ export default function HomePage() {
           id="screens-title"
           eyebrow="Real screens"
           title="A calm plan, a clear next step."
-          intro="Captured from the NextStep Android release build on an Android emulator, with Quadri’s fictional sample semester loaded into a test account. Not mock-ups."
+          intro="Captured from the NextStep Android app — a release build running on an Android emulator with a fictional sample semester. Not mock-ups."
         />
         <div className={styles.gallery} tabIndex={0} role="region" aria-label="Screens from the NextStep Android app">
           {GALLERY.map((s, i) => (
@@ -474,7 +474,7 @@ export default function HomePage() {
           id="story-title"
           eyebrow="An illustrative scenario"
           title="One of Quadri’s evenings."
-          intro="Quadri is fictional — a second-year student in Lagos who works shifts at a print shop and rides the bus home. This is the scenario in the demo video."
+          intro="Quadri is fictional — a second-year student in Lagos who works shifts at a print shop and rides the bus home."
         />
         <ol className={styles.timeline}>
           {[
@@ -495,7 +495,7 @@ export default function HomePage() {
         </ol>
         <div className={styles.storyCta} {...reveal('up')}>
           <ButtonLink href="/demo" variant="energy" size="lg">
-            <Play size={20} aria-hidden /> Watch Quadri’s week
+            <Play size={20} aria-hidden /> Watch the demo
           </ButtonLink>
         </div>
       </Section>

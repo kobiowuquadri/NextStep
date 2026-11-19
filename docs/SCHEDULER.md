@@ -1,6 +1,6 @@
 # Scheduler and Recovery Mode
 
-Source: `packages/scheduler/src`. The planner is **deterministic**: the same inputs (tasks, sessions, availability, commitments, day overrides, preferences, clock, seed) always produce the same plan, the same session IDs and the same explanations. It has no I/O, takes the clock as input, and is shared by the mobile app, the API and the browser demo. Tests: `schedule.test.ts`, `recovery.test.ts` (35 tests).
+Source: `packages/scheduler/src`. The planner is **deterministic**: the same inputs (tasks, sessions, availability, commitments, day overrides, preferences, clock, seed) always produce the same plan, the same session IDs and the same explanations. It has no I/O, takes the clock as input, and is shared by the mobile app and the API. Tests: `schedule.test.ts`, `recovery.test.ts` (35 tests).
 
 ## Inputs
 

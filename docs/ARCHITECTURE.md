@@ -36,7 +36,7 @@ NextStep is a **modular monolith**: one API process, one database, two clients, 
 - **Sync**: `src/lib/sync.ts` — see [SYNC.md](SYNC.md).
 - **Notifications**: local only (`expo-notifications`), rescheduled whenever the plan changes, respecting quiet hours. Remote push is not used.
 - **Focus timer**: stored as timestamps in SQLite, so it survives navigation, backgrounding and process death.
-- **Modes**: signed-in account (syncs) and guest (this phone only). The fictional sample semester was removed from the app on 11 Nov 2026. For screenshots and the demo video it is loaded into a temporary test account through the normal sync API (`apps/api/scripts/sample-account.ts`).
+- **Modes**: signed-in account (syncs) and guest (this phone only). The fictional sample semester was removed from the app on 11 Nov 2026. To show the app with realistic data (for new screenshots or a new video), `apps/api/scripts/sample-account.ts` loads it into a temporary test account through the normal sync API and deletes the account afterwards.
 
 ## API (`apps/api`)
 
