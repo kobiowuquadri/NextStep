@@ -13,12 +13,12 @@
       ]
     },
     {
-      "id": "tobi",
-      "kind": "tobi",
+      "id": "quadri",
+      "kind": "quadri",
       "seconds": 7.6,
       "voice": [
         {
-          "id": "tobi",
+          "id": "quadri",
           "at": 0.5
         }
       ]

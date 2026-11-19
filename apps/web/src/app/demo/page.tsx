@@ -1,16 +1,16 @@
 import type { Metadata } from 'next';
-import { ArrowRight, Captions, Clock3, Download, MousePointerClick, Smartphone, Volume2 } from 'lucide-react';
+import { Captions, Clock3, Download, MousePointerClick, Smartphone, Volume2 } from 'lucide-react';
 import { mascotSvg } from '@nextstep/illustrations';
-import { Art, ButtonLink, Card, Eyebrow, Section, reveal } from '@/components/ui';
-import { DownloadAvailability } from '@/components/DownloadAvailability';
+import { Art, Card, Eyebrow, Section } from '@/components/ui';
+import { ApkDownload } from '@/components/ApkDownload';
 import { WalkthroughPlayer } from '@/components/WalkthroughPlayer';
 import walkthrough from '@/lib/walkthrough.generated.json';
 import styles from './demo-video.module.css';
 
 export const metadata: Metadata = {
-  title: 'Demo',
+  title: 'Demo & download',
   description:
-    'Watch a short walkthrough of the NextStep Android app: plans change, Recovery Mode rebuilds the week, and one small next step gets done. Captions and a transcript included.',
+    'Watch a short narrated walkthrough of the NextStep Android app, then download the Android APK. Captions, a transcript and install steps included.',
   robots: { index: true, follow: true },
 };
 
@@ -28,13 +28,13 @@ export default function DemoVideoPage() {
         <div className="container">
           <div className={styles.head}>
             <span className="rise" style={{ ['--d' as string]: 0, display: 'inline-block' }}>
-              <Eyebrow>Demo</Eyebrow>
+              <Eyebrow>Demo & download</Eyebrow>
             </span>
             <h1 id="demo-title" className={`${styles.title} rise`} style={{ ['--d' as string]: 1 }}>
               See NextStep <span className={styles.accent}>in action.</span>
             </h1>
             <p className={`${styles.lead} rise`} style={{ ['--d' as string]: 2 }}>
-              A {length} walkthrough of the real Android app. Tobi’s plans change, Recovery Mode rebuilds the week, and one small next step gets done.
+              A {length} walkthrough of the real Android app. Quadri’s plans change, Recovery Mode rebuilds the week, and one small next step gets done.
             </p>
           </div>
           <div className={`${styles.stage} rise`} style={{ ['--d' as string]: 3 }}>
@@ -67,12 +67,11 @@ export default function DemoVideoPage() {
         </div>
       </section>
 
-      <Section tone="warm" labelledBy="made-h">
+      <Section tone="warm" labelledBy="download-title">
         <div className={styles.split}>
-          <Card revealAs="up" className={styles.madeCard}>
-            <h2 id="made-h" className={styles.h2}>
-              How this video was made
-            </h2>
+          <ApkDownload id="download" />
+          <Card revealAs="up" delay={1} className={styles.madeCard}>
+            <h2 className={styles.h2}>How this video was made</h2>
             <ul className={styles.made}>
               <li>
                 <Smartphone aria-hidden />{' '}
@@ -81,15 +80,14 @@ export default function DemoVideoPage() {
                 </span>
               </li>
               <li>
-                <MousePointerClick aria-hidden /> <span>Tobi and the sample semester are fictional. No real student data appears.</span>
+                <MousePointerClick aria-hidden />{' '}
+                <span>Quadri and the sample semester are fictional, loaded into a temporary test account. No real student data appears.</span>
               </li>
               <li>
                 <Volume2 aria-hidden />{' '}
                 <span>The narration is a synthetic voice generated with Kokoro, an open-source text-to-speech model. It is not a real person.</span>
               </li>
             </ul>
-          </Card>
-          <Card revealAs="up" delay={1} className={styles.transcriptCard}>
             <details className={styles.transcript}>
               <summary>Read the transcript</summary>
               <div>
@@ -99,31 +97,6 @@ export default function DemoVideoPage() {
               </div>
             </details>
           </Card>
-        </div>
-      </Section>
-
-      <Section labelledBy="try-h">
-        <div className={styles.try} {...reveal('scale')}>
-          <div className={styles.tryArt} aria-hidden>
-            <Art svg={mascotSvg({ pose: 'encourage' })} />
-          </div>
-          <div>
-            <h2 id="try-h" className={styles.h2}>
-              Prefer to click through it yourself?
-            </h2>
-            <p className={styles.tryText}>
-              The interactive demo runs in your browser with the same fictional student. Your changes stay in your browser, and you can reset at any time.
-            </p>
-            <div className={styles.tryCtas}>
-              <ButtonLink href="/demo/interactive" size="lg">
-                Try the interactive demo <ArrowRight size={20} aria-hidden />
-              </ButtonLink>
-              <ButtonLink href="/features" variant="secondary" size="lg">
-                Explore the app
-              </ButtonLink>
-            </div>
-            <DownloadAvailability />
-          </div>
         </div>
       </Section>
     </>

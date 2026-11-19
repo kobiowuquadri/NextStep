@@ -12,13 +12,8 @@
     "screens:android": "node scripts/capture-android.mjs"
   },
   "dependencies": {
-    "@nextstep/contracts": "workspace:*",
-    "@nextstep/demo-data": "workspace:*",
     "@nextstep/design-tokens": "workspace:*",
-    "@nextstep/engine": "workspace:*",
-    "@nextstep/gamification": "workspace:*",
     "@nextstep/illustrations": "workspace:*",
-    "@nextstep/scheduler": "workspace:*",
     "lucide-react": "^1.70.0",
     "next": "16.4.5",
     "react": "19.3.0",

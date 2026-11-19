@@ -243,27 +243,12 @@ importers:
 
   apps/web:
     dependencies:
-      '@nextstep/contracts':
-        specifier: workspace:*
-        version: link:../../packages/contracts
-      '@nextstep/demo-data':
-        specifier: workspace:*
-        version: link:../../packages/demo-data
       '@nextstep/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
-      '@nextstep/engine':
-        specifier: workspace:*
-        version: link:../../packages/engine
-      '@nextstep/gamification':
-        specifier: workspace:*
-        version: link:../../packages/gamification
       '@nextstep/illustrations':
         specifier: workspace:*
         version: link:../../packages/illustrations
-      '@nextstep/scheduler':
-        specifier: workspace:*
-        version: link:../../packages/scheduler
       lucide-react:
         specifier: ^1.70.0
         version: 1.70.0(@types/react@19.3.0)(react@19.3.0)

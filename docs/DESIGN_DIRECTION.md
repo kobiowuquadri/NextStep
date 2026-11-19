@@ -23,7 +23,7 @@ What we observed:
 2. **Tactile, not glossy.** Buttons and key cards have a 2 px ink border and a 4 px hard offset shadow that “presses” to 1 px — the same treatment on web and mobile (`tactile` tokens).
 3. **Warm canvas, purposeful colour.** A warm cream canvas instead of pure white (calmer for long reading, kinder in bright sunlight), one strong brand colour, and supporting colours that each carry one meaning.
 4. **Illustration tells the story; screenshots prove it.** An original mascot and scenes explain *feelings* (overwhelmed → recovered). Real screenshots of the implemented app and demo show *what it does*. No fake screenshots.
-5. **Honest proof.** Where a typical landing page would show testimonials and awards, NextStep shows the Recovery Mode walkthrough, a clearly-labelled fictional scenario (Tobi) and a working demo.
+5. **Honest proof.** Where a typical landing page would show testimonials and awards, NextStep shows the Recovery Mode walkthrough, a clearly-labelled fictional scenario (Quadri), a narrated video of the real app and a working Android download.
 6. **Mobile first, low-data aware.** Single-column layouts, system-friendly font loading, vector illustrations as inline SVG (no illustration image downloads), real PNG screenshots only where they prove something.
 
 ## NextStep identity

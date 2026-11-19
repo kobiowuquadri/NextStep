@@ -9,6 +9,7 @@ import { authedRequest } from '../lib/api';
 import { useApp } from '../lib/store';
 import { Button, Card, Choice, Dot, Field, Mascot, Notice, Row, Screen, SectionLabel, T } from '../ui/kit';
 import { DatePick, TimePick } from '../ui/pickers';
+import { SelectField } from '../ui/forms';
 import { useTheme } from '../ui/theme';
 
 type Kind = RecoveryInput['kind'];
@@ -212,7 +213,15 @@ export default function Recovery() {
           )}
           {kind === 'deadline_changed' && (
             <>
-              <Choice label="Which deadline officially changed?" value={taskId} options={live(state.tasks).filter((t) => t.dueAt && t.status !== 'done' && !t.goalId).map((t) => ({ value: t.id, label: t.title }))} onChange={setTaskId} />
+              <SelectField
+                label="Which deadline officially changed?"
+                value={taskId || null}
+                placeholder="Choose a task"
+                options={live(state.tasks)
+                  .filter((t) => t.dueAt && t.status !== 'done' && !t.goalId)
+                  .map((t) => ({ value: t.id, label: t.title, hint: `Due ${formatInstant(Date.parse(t.dueAt!), tz)}` }))}
+                onChange={setTaskId}
+              />
               <DatePick label="New date" today={today} value={newDate} onChange={setNewDate} />
               <TimePick label="New time" value={newTime} onChange={setNewTime} />
               <Pressable onPress={() => setConfirmed((v) => !v)} accessibilityRole="checkbox" accessibilityState={{ checked: confirmed }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', minHeight: 48 }}>

@@ -7,6 +7,7 @@ import { live, logFocus } from '@nextstep/engine';
 import { currentSessionLabels } from '@nextstep/scheduler';
 import { useApp } from '../lib/store';
 import { Button, Card, Choice, Field, Row, Screen, T } from '../ui/kit';
+import { DurationPick, SelectField } from '../ui/forms';
 import { useTheme } from '../ui/theme';
 
 const OBSTACLES = ['Data ran out', 'Power cut', 'Work ran late', 'Too tired', 'Family needed me', 'Hard to focus', 'Topic was confusing'];
@@ -38,22 +39,22 @@ export default function CheckIn() {
   const [minutes, setMinutes] = useState(p.focusMinutes ? Number(p.focusMinutes) : (session?.minutes ?? 30));
   const [done, setDone] = useState<string[]>(() => subtasks.filter((s) => s.title === sessionLabel).map((s) => s.id));
   const [note, setNote] = useState('');
-  const [remaining, setRemaining] = useState(
-    String(Math.max(0, (task?.remainingMinutes ?? 0) - (p.focusMinutes ? Number(p.focusMinutes) : (session?.minutes ?? 30)))),
-  );
+  const [remaining, setRemaining] = useState(Math.max(0, (task?.remainingMinutes ?? 0) - (p.focusMinutes ? Number(p.focusMinutes) : (session?.minutes ?? 30))));
   // The suggestion follows the chosen focus time until the student types their own number.
   const [remainingEdited, setRemainingEdited] = useState(false);
   const chooseMinutes = (m: number) => {
     setMinutes(m);
-    if (!remainingEdited) setRemaining(String(Math.max(0, (task?.remainingMinutes ?? 0) - m)));
+    if (!remainingEdited) setRemaining(Math.max(0, (task?.remainingMinutes ?? 0) - m));
   };
   const [ready, setReady] = useState<'ready' | 'more_practice' | 'unsure' | ''>('');
   const [obstacles, setObstacles] = useState<string[]>([]);
   const [breakTaken, setBreakTaken] = useState((p.breaks ? Number(p.breaks) : 0) > 0);
+  const [saving, setSaving] = useState(false);
   if (!state) return null;
   const openTasks = live(state.tasks).filter((t) => t.status !== 'done' && !t.goalId);
 
   const save = async () => {
+    setSaving(true);
     const end = Date.now();
     const start = p.startedAt ? Number(p.startedAt) : end - minutes * 60_000;
     await run(
@@ -69,15 +70,16 @@ export default function CheckIn() {
             focusMinutes: minutes,
             breakCount: breakTaken ? 1 : 0,
             finishedNote: note.trim() || null,
-            remainingMinutes: task ? Math.max(0, Number(remaining) || 0) : null,
+            remainingMinutes: task ? Math.max(0, remaining) : null,
             readiness: ready || null,
             obstacles,
             completedSubtaskIds: done,
           },
           ctx,
         ),
-      { toast: 'Session logged' },
+      { toast: remaining === 0 && task ? 'Session logged · task finished' : 'Session logged' },
     );
+    setSaving(false);
     router.back();
   };
 
@@ -89,11 +91,17 @@ export default function CheckIn() {
       </T>
       {!session && (
         <Card flat>
-          <Choice
-            label="Task (optional)"
+          <SelectField
+            label="Which task was this for? (optional)"
             value={taskId ?? ''}
-            options={[{ value: '', label: 'No task' }, ...openTasks.map((t) => ({ value: t.id, label: t.title }))]}
-            onChange={(v) => setTaskId(v || null)}
+            options={[{ value: '', label: 'No task — just focus time' }, ...openTasks.map((t) => ({ value: t.id, label: t.title }))]}
+            onChange={(v) => {
+              setTaskId(v || null);
+              const t = openTasks.find((x) => x.id === v);
+              setRemainingEdited(false);
+              setRemaining(Math.max(0, (t?.remainingMinutes ?? 0) - minutes));
+              setDone([]);
+            }}
           />
         </Card>
       )}
@@ -147,15 +155,16 @@ export default function CheckIn() {
         )}
         <Field label="Anything else you finished? (optional)" value={note} onChangeText={setNote} maxLength={200} />
         {task && (
-          <Field
-            label="How much work is left on this task? (minutes)"
+          <DurationPick
+            label="How much work is left on this task?"
             value={remaining}
-            onChangeText={(v) => {
+            onChange={(m) => {
               setRemainingEdited(true);
-              setRemaining(v.replace(/[^0-9]/g, ''));
+              setRemaining(m);
             }}
-            keyboardType="number-pad"
-            hint="0 marks the task complete."
+            presets={[30, 60, 120]}
+            zeroLabel="Finished"
+            hint={remaining === 0 ? 'Saving marks the task complete.' : `Was ${formatMinutes(task.remainingMinutes)} before this session.`}
           />
         )}
         <Choice
@@ -211,7 +220,7 @@ export default function CheckIn() {
           ]}
           onChange={(v) => setBreakTaken(v === 'yes')}
         />
-        <Button label="Save check-in" onPress={() => void save()} />
+        <Button label="Save check-in" loading={saving} onPress={() => void save()} />
         <Button label="Cancel" variant="ghost" onPress={() => router.back()} />
       </Card>
     </Screen>

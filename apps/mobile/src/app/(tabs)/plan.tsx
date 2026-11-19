@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
 import { AlertTriangle, Briefcase, Bus, Coffee, GraduationCap, Heart, Pin, Plus, RefreshCw, Settings2, Shuffle } from '../../ui/icons';
 import { formatDateKey, formatMinutes, formatTimeOfDay, localDateKey, weekdayOfKey } from '@nextstep/contracts';
@@ -9,11 +9,12 @@ import { analyzePlan } from '@nextstep/scheduler';
 import { toPlannerInput } from '@nextstep/engine';
 import { useDerived } from '../../lib/derive';
 import { useApp } from '../../lib/store';
+import { KIND_LABEL } from '../../lib/suggestions';
 import { Button, Card, Choice, Dot, Empty, ListRow, Notice, Row, Screen, SectionLabel, StatusChip, T } from '../../ui/kit';
+import { ActionSheet } from '../../ui/forms';
 import { useTheme } from '../../ui/theme';
 
 const KIND_ICON = { work: Briefcase, commute: Bus, class: GraduationCap, family: Heart, rest: Coffee, worship: Heart, other: Briefcase } as const;
-const KIND_LABEL: Record<string, string> = { assignment: 'Assignment', exam: 'Exam / test', revision: 'Revision', reading: 'Reading', project: 'Project', practice: 'Practice', personal: 'Personal' };
 
 export default function Plan() {
   const { c } = useTheme();
@@ -21,6 +22,7 @@ export default function Plan() {
   const d = useDerived();
   const [tab, setTab] = useState<'week' | 'tasks'>('week');
   const [day, setDay] = useState<string | null>(null);
+  const [openSession, setOpenSession] = useState<string | null>(null);
   if (!state || !d) return null;
   const selected = day ?? d.day;
   const manual = state.preferences.planningMode === 'manual';
@@ -62,14 +64,7 @@ export default function Plan() {
           key={s.id}
           accessibilityRole="button"
           accessibilityLabel={`${formatTimeOfDay(Date.parse(s.startAt), d.tz)}, ${s.minutes} minutes, ${d.labelOf(s) ?? t?.title}${s.pinned ? ', pinned' : ''}${s.status !== 'planned' ? `, ${s.status}` : ''}`}
-          onPress={() =>
-            Alert.alert(d.labelOf(s) ?? t?.title ?? 'Session', `${formatTimeOfDay(Date.parse(s.startAt), d.tz)}–${formatTimeOfDay(Date.parse(s.endAt), d.tz)} · ${s.minutes} min.\nMoving a session never changes the task’s real deadline.`, [
-              { text: 'Log it', onPress: () => router.push({ pathname: '/checkin', params: { sessionId: s.id, mode: 'manual' } }) },
-              { text: 'I missed this', onPress: () => router.push({ pathname: '/recovery', params: { kind: 'missed_session', sessionIds: s.id } }) },
-              { text: s.pinned ? 'Unpin' : 'Pin this time', onPress: () => void run((st, ctx) => setSessionPinned(st, s.id, !s.pinned, ctx), { toast: s.pinned ? 'Unpinned' : 'Pinned — replanning keeps it here' }) },
-              { text: 'Close', style: 'cancel' },
-            ])
-          }
+          onPress={() => setOpenSession(s.id)}
           style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12, borderRadius: 16, borderWidth: 2, borderLeftWidth: 8, borderColor: c.borderStrong, borderLeftColor: course?.color ?? c.primary, backgroundColor: c.surface, opacity: s.status !== 'planned' || past ? 0.6 : 1 }}
         >
           <View style={{ minWidth: 52 }}>
@@ -93,12 +88,44 @@ export default function Plan() {
       ) };
     }),
   ].sort((a, b) => a.at.localeCompare(b.at));
+  const sheetSession = openSession ? state.sessions.find((x) => x.id === openSession && !x.deletedAt) : undefined;
+  const sheetTask = sheetSession ? d.tasks.get(sheetSession.taskId) : undefined;
+  const sheetLabel = sheetSession ? d.labelOf(sheetSession) : undefined;
 
   return (
     <Screen>
+      <ActionSheet
+        visible={!!sheetSession}
+        onClose={() => setOpenSession(null)}
+        title={sheetSession ? (sheetLabel ?? sheetTask?.title ?? 'Session') : ''}
+        message={
+          sheetSession
+            ? [
+                `${formatDateKey(localDateKey(Date.parse(sheetSession.startAt), d.tz))} · ${formatTimeOfDay(Date.parse(sheetSession.startAt), d.tz)}–${formatTimeOfDay(Date.parse(sheetSession.endAt), d.tz)} · ${sheetSession.minutes} min`,
+                sheetLabel && sheetTask ? sheetTask.title : null,
+                'Moving a session never changes the task’s real deadline.',
+              ]
+                .filter(Boolean)
+                .join('\n')
+            : undefined
+        }
+        actions={
+          sheetSession
+            ? [
+                { label: 'Log it', variant: 'primary' as const, onPress: () => router.push({ pathname: '/checkin', params: { sessionId: sheetSession.id, mode: 'manual' } }) },
+                { label: 'I missed this', onPress: () => router.push({ pathname: '/recovery', params: { kind: 'missed_session', sessionIds: sheetSession.id } }) },
+                {
+                  label: sheetSession.pinned ? 'Unpin this time' : 'Pin this time',
+                  onPress: () => void run((st, ctx) => setSessionPinned(st, sheetSession.id, !sheetSession.pinned, ctx), { toast: sheetSession.pinned ? 'Unpinned' : 'Pinned — replanning keeps it here' }),
+                },
+                ...(sheetTask ? [{ label: 'Open task', variant: 'ghost' as const, onPress: () => router.push(`/task/${sheetTask.id}`) }] : []),
+              ]
+            : []
+        }
+      />
       <Row style={{ justifyContent: 'space-between' }}>
         <T variant="h1">Plan</T>
-        <Button label="Availability" small variant="ghost" icon={<Settings2 size={16} color={c.primarySoftText} />} onPress={() => router.push('/settings/time')} />
+        <Button label="Study times" small variant="ghost" icon={<Settings2 size={16} color={c.primarySoftText} />} onPress={() => router.push('/settings/time')} />
       </Row>
       <Choice value={tab} options={[{ value: 'week', label: 'Week' }, { value: 'tasks', label: 'Tasks' }]} onChange={setTab} />
 
@@ -198,14 +225,14 @@ export default function Plan() {
             .map((tp) => {
               const t = d.tasks.get(tp.taskId)!;
               const course = t.courseId ? d.courses.get(t.courseId) : undefined;
-              return <ListRow key={tp.taskId} title={t.title} subtitle={`${KIND_LABEL[t.kind]} · ${formatMinutes(t.remainingMinutes)} left\n${tp.explanation}`} left={<Dot color={course?.color} />} right={<StatusChip status={tp.status} />} onPress={() => router.push(`/task/${t.id}`)} />;
+              return <ListRow key={tp.taskId} title={t.title} subtitle={`${KIND_LABEL[t.kind] ?? 'Task'} ·${formatMinutes(t.remainingMinutes)} left\n${tp.explanation}`} left={<Dot color={course?.color} />} right={<StatusChip status={tp.status} />} onPress={() => router.push(`/task/${t.id}`)} />;
             })}
           {live(state.tasks)
             .filter((t) => t.status === 'done' && !t.goalId)
             .map((t) => (
               <ListRow key={t.id} title={t.title} subtitle="Completed" right={<StatusChip status="done" />} onPress={() => router.push(`/task/${t.id}`)} />
             ))}
-          <Button label="Courses" variant="ghost" onPress={() => router.push('/settings/courses')} />
+          <Button label="Manage courses" variant="ghost" onPress={() => router.push('/settings/courses')} />
         </View>
       )}
     </Screen>

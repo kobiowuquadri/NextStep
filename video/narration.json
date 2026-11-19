@@ -1,15 +1,14 @@
 {
   "voice": "af_heart",
-  "speed": 1.0,
+  "speed": 1,
   "lines": [
     {
       "id": "intro",
       "text": "This is NextStep: a study planner for students juggling classes, work, and life."
     },
     {
-      "id": "tobi",
-      "text": "Meet Tobi. Tobi is fictional: a second-year student who works shifts at a print shop and rides the bus home.",
-      "say": "Meet Toby. Toby is fictional: a second-year student who works shifts at a print shop and rides the bus home."
+      "id": "quadri",
+      "text": "Meet Quadri. Quadri is fictional: a second-year student who works shifts at a print shop and rides the bus home."
     },
     {
       "id": "today",
@@ -17,13 +16,11 @@
     },
     {
       "id": "recover1",
-      "text": "When plans change, Tobi taps 'My plans changed', picks 'I have less time', and says forty-five minutes.",
-      "say": "When plans change, Toby taps 'My plans changed', picks 'I have less time', and says forty-five minutes."
+      "text": "When plans change, Quadri taps 'My plans changed', picks 'I have less time', and says forty-five minutes."
     },
     {
       "id": "recover2",
-      "text": "NextStep shows exactly what moves, with a reason for every change. Nothing changes until Tobi accepts.",
-      "say": "NextStep shows exactly what moves, with a reason for every change. Nothing changes until Toby accepts."
+      "text": "NextStep shows exactly what moves, with a reason for every change. Nothing changes until Quadri accepts."
     },
     {
       "id": "focus",

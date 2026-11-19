@@ -18,9 +18,9 @@ import {
   type Ctx,
 } from '@nextstep/engine';
 import { buildToday } from '@nextstep/scheduler';
-import { buildTobiScenario, DEMO_TIMEZONE, LEARNING_RESOURCES } from './index';
+import { buildQuadriScenario, DEMO_TIMEZONE, LEARNING_RESOURCES } from './index';
 
-// Wednesday 11 Nov 2026, 17:45 in Lagos — Tobi is on the bus home.
+// Wednesday 11 Nov 2026, 17:45 in Lagos — Quadri is on the bus home.
 const NOW = Date.parse('2026-11-11T16:45:00Z');
 let n = 0;
 const ctx = (now = NOW): Ctx => ({ now, newId: () => stableUuid('test', ++n) });
@@ -30,9 +30,9 @@ const ok = (r: ActionResult | { error: string }): ActionResult => {
 };
 const xp = (s: AppState) => live(s.events).reduce((a, e) => a + e.xp, 0);
 
-describe('Tobi demo scenario', () => {
+describe('Quadri demo scenario', () => {
   it('has three courses, a Friday assignment, a test, work and commute, a reading goal and a missed session', () => {
-    const s = buildTobiScenario(NOW);
+    const s = buildQuadriScenario(NOW);
     expect(live(s.courses)).toHaveLength(3);
     const assignment = s.tasks.find((t) => t.title === 'Linked list assignment')!;
     expect(new Date(assignment.dueAt!).getUTCDay()).toBe(5);
@@ -45,7 +45,7 @@ describe('Tobi demo scenario', () => {
   });
 
   it('runs the full recovery story: 45 minutes, accept, complete next step, Back on Track once', () => {
-    let s = buildTobiScenario(NOW);
+    let s = buildQuadriScenario(NOW);
     const day = localDateKey(NOW, DEMO_TIMEZONE);
     const before = xp(s);
 
@@ -62,7 +62,7 @@ describe('Tobi demo scenario', () => {
     expect(record.nextActionSessionId).toBe(proposal.nextAction!.sessionId);
     expect(currentRevision(s)).toBe(proposal.baseRevision + 1);
 
-    // Tobi does the 45-minute next step.
+    // Quadri does the 45-minute next step.
     const next = s.sessions.find((x) => x.id === record.nextActionSessionId)!;
     const done = ok(
       logFocus(s, { taskId: next.taskId, sessionId: next.id, mode: 'timer', startedAt: next.startAt, endedAt: next.endAt, focusMinutes: next.minutes, breakCount: 1, finishedNote: 'Insert works', readiness: 'more_practice', obstacles: [] }, ctx(Date.parse(next.endAt))),
@@ -80,7 +80,7 @@ describe('Tobi demo scenario', () => {
   });
 
   it('refuses a stale preview after the plan changed and never applies it', () => {
-    const s = buildTobiScenario(NOW);
+    const s = buildQuadriScenario(NOW);
     const proposal = previewRecovery(s, { kind: 'less_time', date: localDateKey(NOW, DEMO_TIMEZONE), availableMinutes: 45 }, ctx());
     const edited = ok(updateTask(s, s.tasks.find((t) => t.kind === 'exam')!.id, { remainingMinutes: 240 }, ctx())).state;
     expect(acceptRecovery(edited, proposal, ctx())).toEqual({ error: 'STALE_PREVIEW', reason: 'inputs_changed' });
@@ -89,7 +89,7 @@ describe('Tobi demo scenario', () => {
   });
 
   it('undo restores the previous plan and is refused once later work exists', () => {
-    let s = buildTobiScenario(NOW);
+    let s = buildQuadriScenario(NOW);
     const slot = (x: { taskId: string; startAt: string; endAt: string }) => `${x.taskId}|${x.startAt}|${x.endAt}`;
     const sessionsBefore = live(s.sessions).filter((x) => x.status === 'planned').map(slot).sort();
     const proposal = previewRecovery(s, { kind: 'urgent', startDate: localDateKey(NOW, DEMO_TIMEZONE), days: 1 }, ctx());
@@ -115,7 +115,7 @@ describe('Tobi demo scenario', () => {
   });
 
   it('awards task completion once even if completed, reopened and completed again', () => {
-    let s = buildTobiScenario(NOW);
+    let s = buildQuadriScenario(NOW);
     const t = s.tasks.find((x) => x.title === 'Essay outline')!;
     s = ok(completeTask(s, t.id, ctx())).state;
     const first = xp(s);
@@ -125,7 +125,7 @@ describe('Tobi demo scenario', () => {
   });
 
   it('explains an overloaded week instead of presenting an impossible plan', () => {
-    const s = buildTobiScenario(NOW, { overloaded: true });
+    const s = buildQuadriScenario(NOW, { overloaded: true });
     const { plan } = generatePlanAction(s, ctx());
     expect(plan.shortfall).not.toBeNull();
     expect(plan.shortfall!.totalMinutes).toBeGreaterThan(0);
@@ -136,7 +136,7 @@ describe('Tobi demo scenario', () => {
   });
 
   it('weekly summary separates logged activity from results and suggests adjustments', () => {
-    const s = buildTobiScenario(NOW);
+    const s = buildQuadriScenario(NOW);
     const summary = weeklySummary(s, '2026-11-09', NOW);
     expect(summary.actualMinutes).toBeGreaterThanOrEqual(45);
     expect(summary.suggestions.length).toBeGreaterThan(0);

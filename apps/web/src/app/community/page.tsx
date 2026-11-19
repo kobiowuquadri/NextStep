@@ -73,14 +73,14 @@ export default function CommunityPage() {
           id="a11y-h"
           eyebrow="Accessibility"
           title="Usable by more people, by default."
-          intro="These are built in across the app, the website and the demo."
+          intro="These are built into both the app and this website."
         />
         <div className={styles.listGrid}>
           <Card revealAs="up" delay={0}>
             <h3>
               <Accessibility aria-hidden /> Screen readers & keyboard
             </h3>
-            <p>Every control has a label, status is announced in words, and the website and demo can be used fully with a keyboard, with visible focus.</p>
+            <p>Every control has a label, status is announced in words, and the website can be used fully with a keyboard, with visible focus.</p>
           </Card>
           <Card revealAs="up" delay={1}>
             <h3>

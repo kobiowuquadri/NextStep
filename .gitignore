@@ -33,6 +33,7 @@ GoogleService-Info.plist
 
 # App binaries
 *.apk
+!apps/web/public/downloads/*.apk
 *.aab
 *.ipa
 

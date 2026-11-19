@@ -3,8 +3,9 @@ import { router } from 'expo-router';
 import { instantAt, localDateKey, parseHHMM } from '@nextstep/contracts';
 import { addManualSession, live } from '@nextstep/engine';
 import { useApp } from '../../lib/store';
-import { Button, Card, Choice, Notice, Screen, T } from '../../ui/kit';
-import { DatePick, TimePick } from '../../ui/pickers';
+import { Button, Card, Notice, Screen, T } from '../../ui/kit';
+import { SelectField } from '../../ui/forms';
+import { DatePick, TimeRangePick } from '../../ui/pickers';
 
 /** Manual planning: place a session yourself. It is pinned, so automatic replans keep it. */
 export default function AddSession() {
@@ -22,10 +23,18 @@ export default function AddSession() {
     <Screen>
       <T variant="h1">Add a session</T>
       <Card>
-        {tasks.length === 0 ? <Notice>Add a task first.</Notice> : <Choice label="Task" value={taskId} options={tasks.map((t) => ({ value: t.id, label: t.title }))} onChange={setTaskId} />}
+        {tasks.length === 0 ? <Notice>Add a task first, then place its sessions here.</Notice> : <SelectField label="Task" value={taskId || null} placeholder="Choose a task" options={tasks.map((t) => ({ value: t.id, label: t.title }))} onChange={setTaskId} />}
         <DatePick label="Day" today={today} value={date} onChange={setDate} days={21} />
-        <TimePick label="Start" value={start} onChange={setStart} />
-        <TimePick label="End" value={end} onChange={setEnd} min={start} />
+        <TimeRangePick
+          from={start}
+          to={end}
+          fromLabel="Start"
+          toLabel="End"
+          onChange={(f, t) => {
+            setStart(f);
+            setEnd(t);
+          }}
+        />
         <Button
           label="Add session"
           disabled={!valid}

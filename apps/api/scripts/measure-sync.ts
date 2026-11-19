@@ -8,7 +8,7 @@ import { randomUUID } from 'node:crypto';
 import http from 'node:http';
 import { gzipSync } from 'node:zlib';
 import { localDateKey, type SyncOp } from '@nextstep/contracts';
-import { buildTobiScenario } from '@nextstep/demo-data';
+import { buildQuadriScenario } from '@nextstep/demo-data';
 import { acceptRecovery, COLLECTION_OF, previewRecovery, updateTask, type ActionResult, type AppState, type Mutation } from '@nextstep/engine';
 
 const API = new URL(process.env.API_URL ?? 'http://localhost:4000');
@@ -42,13 +42,13 @@ const toOps = (mutations: Mutation[], batch?: { base: number }): SyncOp[] => {
   }));
 };
 
-const reg = await raw('POST', '/v1/auth/register', { email: `measure-${randomUUID().slice(0, 8)}@example.test`, password: 'measurement password', displayName: 'Tobi', timezone: 'Africa/Lagos' }, {});
+const reg = await raw('POST', '/v1/auth/register', { email: `measure-${randomUUID().slice(0, 8)}@example.test`, password: 'measurement password', displayName: 'Quadri', timezone: 'Africa/Lagos' }, {});
 const auth = { Authorization: `Bearer ${reg.json.accessToken}` };
 const userId = reg.json.user.id as string;
 
 // 1. Upload a full fictional semester (what a phone pushes after onboarding offline).
-const tobi = buildTobiScenario(Date.now());
-const state: AppState = { ...tobi, userId, preferences: { ...tobi.preferences, id: userId } };
+const quadri = buildQuadriScenario(Date.now());
+const state: AppState = { ...quadri, userId, preferences: { ...quadri.preferences, id: userId } };
 const all: Mutation[] = [];
 for (const [entity, key] of Object.entries(COLLECTION_OF)) {
   for (const r of (state as unknown as Record<string, Array<Record<string, unknown>>>)[key] ?? []) all.push({ entity: entity as Mutation['entity'], kind: 'upsert', id: r.id as string, record: r, isNew: true });

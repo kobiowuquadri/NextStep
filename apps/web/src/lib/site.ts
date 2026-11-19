@@ -6,14 +6,7 @@ export const site = {
     'NextStep helps students organise coursework, build realistic study plans and recover when life disrupts them. Built by Team Apex for students balancing study, work, commuting and family.',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || '',
-  downloads: {
-    android: process.env.NEXT_PUBLIC_ANDROID_URL || '',
-    ios: process.env.NEXT_PUBLIC_IOS_URL || '',
-    apk: process.env.NEXT_PUBLIC_APK_URL || '',
-  },
 };
-
-export const hasDownloads = () => Boolean(site.downloads.android || site.downloads.ios || site.downloads.apk);
 
 export const nav = [
   { href: '/how-it-works', label: 'How it works' },
@@ -25,7 +18,7 @@ export const nav = [
 
 export const footerNav = [
   { href: '/demo', label: 'Watch the demo' },
-  { href: '/demo/interactive', label: 'Interactive demo' },
+  { href: '/demo#download', label: 'Download the Android app' },
   { href: '/how-it-works', label: 'How it works' },
   { href: '/features', label: 'Features' },
   { href: '/community', label: 'Community & accessibility' },

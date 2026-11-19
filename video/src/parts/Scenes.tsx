@@ -109,7 +109,7 @@ export const Intro = ({ duration }: { duration: number }) => {
   );
 };
 
-export const Tobi = ({ duration }: { duration: number }) => {
+export const Quadri = ({ duration }: { duration: number }) => {
   const enter = useEnter(0, { damping: 14 });
   const out = useExit(duration, 12);
   const facts: { icon: 'briefcase' | 'bus' | 'book' | 'target'; text: string; bg: string; fg: string }[] = [
@@ -146,10 +146,10 @@ export const Tobi = ({ duration }: { duration: number }) => {
               ...displayText(84),
             }}
           >
-            T
+            Q
           </div>
           <div>
-            <div style={{ ...displayText(110) }}>Tobi</div>
+            <div style={{ ...displayText(96) }}>Quadri</div>
             <div style={{ fontFamily: TEXT, fontWeight: 700, fontSize: 30, color: C.inkSoft, marginTop: 6 }}>Second-year student</div>
           </div>
         </div>
@@ -162,7 +162,7 @@ export const Tobi = ({ duration }: { duration: number }) => {
       {/* Facts */}
       <div style={{ position: 'absolute', left: 960, top: 210 }}>
         <Rise delay={6} distance={70}>
-          <span style={{ ...displayText(104) }}>Meet Tobi.</span>
+          <span style={{ ...displayText(104) }}>Meet Quadri.</span>
         </Rise>
         <div style={{ marginTop: 36, display: 'grid', gap: 22 }}>
           {facts.map((fact, i) => (
@@ -210,7 +210,7 @@ export const Outro = ({ duration }: { duration: number }) => {
           <Tagline delay={20} size={92} />
         </div>
         <div style={{ marginTop: 50, display: 'flex', gap: 16 }}>
-          {['Built by Team Apex', 'Tobi is fictional', 'Not in app stores yet'].map((t, i) => (
+          {['Built by Team Apex', 'Quadri is fictional', 'Android APK on our website'].map((t, i) => (
             <Rise key={t} delay={44 + i * 6} distance={30}>
               <span
                 style={{

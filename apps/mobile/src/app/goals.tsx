@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 import { goalCheckin, goalMinutesThisWeek, live, saveGoal } from '@nextstep/engine';
 import { useApp } from '../lib/store';
-import { Button, Card, Choice, Field, Screen, T, Toggle, XpBar } from '../ui/kit';
+import { Button, Card, Choice, Screen, T, Toggle, XpBar } from '../ui/kit';
+import { SuggestField } from '../ui/forms';
+import { GOAL_IDEAS } from '../lib/suggestions';
 
 type Category = 'reading' | 'exercise' | 'skill' | 'wellbeing' | 'other';
 
@@ -38,8 +40,8 @@ export default function Goals() {
       {goals.filter((g) => g.active).length < 2 ? (
         <Card>
           <T variant="h3">Add a goal</T>
-          <Field label="Goal" value={title} onChangeText={setTitle} placeholder="e.g. Read for fun" maxLength={80} />
           <Choice label="Type" value={category} options={[{ value: 'reading', label: 'Reading' }, { value: 'exercise', label: 'Exercise' }, { value: 'skill', label: 'Skill' }, { value: 'wellbeing', label: 'Wellbeing' }, { value: 'other', label: 'Other' }]} onChange={setCategory} />
+          <SuggestField label="Goal" value={title} onChangeText={setTitle} suggestions={GOAL_IDEAS[category]} placeholder="e.g. Read for fun" maxLength={80} autoCapitalize="sentences" />
           <Choice label="Per week" value={weekly} options={[30, 60, 90, 120].map((m) => ({ value: m, label: `${m} min` }))} onChange={setWeekly} />
           <Choice label="Session" value={session} options={[10, 20, 30, 45].map((m) => ({ value: m, label: `${m} min` }))} onChange={setSession} />
           <Toggle label="Plan time for it" hint="Fitted after deadline work, at most once a day" value={schedule} onChange={setSchedule} />

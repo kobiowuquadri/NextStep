@@ -13,7 +13,18 @@ const config: NextConfig = {
   poweredByHeader: false,
   turbopack: { root: path.join(import.meta.dirname, '..', '..') },
   async headers() {
-    return [{ source: '/:path*', headers: securityHeaders }];
+    return [
+      { source: '/:path*', headers: securityHeaders },
+      {
+        // Versioned file names (NextStep-<version>.apk), so the file can be cached for good.
+        source: '/downloads/:file*',
+        headers: [
+          { key: 'Content-Type', value: 'application/vnd.android.package-archive' },
+          { key: 'Content-Disposition', value: 'attachment' },
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+    ];
   },
 };
 

@@ -6,6 +6,8 @@ import { courseColors } from '@nextstep/design-tokens';
 import { deleteCourse, live, saveCourse } from '@nextstep/engine';
 import { useApp } from '../../lib/store';
 import { Button, Card, Field, ListRow, Row, Screen, T } from '../../ui/kit';
+import { SuggestField } from '../../ui/forms';
+import { COURSE_IDEAS } from '../../lib/suggestions';
 import { useTheme } from '../../ui/theme';
 
 export default function Courses() {
@@ -34,8 +36,8 @@ export default function Courses() {
         />
       ))}
       <Card>
-        <Field label="Course title" value={title} onChangeText={setTitle} maxLength={100} />
-        <Field label="Code (optional)" value={code} onChangeText={setCode} maxLength={20} />
+        <SuggestField label="Course title" value={title} onChangeText={setTitle} suggestions={COURSE_IDEAS.filter((t) => !courses.some((co) => co.title === t))} max={6} maxLength={100} placeholder="e.g. Data Structures" autoCapitalize="words" />
+        <Field label="Course code (optional)" value={code} onChangeText={setCode} maxLength={20} placeholder="e.g. CSC 205" autoCapitalize="characters" />
         <T variant="small" weight="700">
           Colour
         </T>
@@ -44,7 +46,7 @@ export default function Courses() {
             <Pressable key={col} onPress={() => setColor(col)} accessibilityRole="radio" accessibilityState={{ checked: color === col }} accessibilityLabel={`Colour ${col}`} style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: col, borderWidth: color === col ? 4 : 2, borderColor: c.borderStrong }} />
           ))}
         </Row>
-        <Button label="Add course" disabled={!title.trim()} onPress={async () => { await run((s, ctx) => saveCourse(s, { title: title.trim(), code: code.trim() || null, color }, ctx), { toast: 'Course added' }); setTitle(''); setCode(''); }} />
+        <Button label="Add course" disabled={!title.trim()} onPress={async () => { await run((s, ctx) => saveCourse(s, { title: title.trim(), code: code.trim().toUpperCase() || null, color }, ctx), { toast: 'Course added' }); setTitle(''); setCode(''); }} />
       </Card>
       <Button label="Done" variant="ghost" onPress={() => router.back()} />
     </Screen>

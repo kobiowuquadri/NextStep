@@ -11,6 +11,7 @@ export { default as CalendarRange } from 'lucide-react-native/icons/calendar-ran
 export { default as CalendarX2 } from 'lucide-react-native/icons/calendar-x-2';
 export { default as Check } from 'lucide-react-native/icons/check';
 export { default as CheckCircle2 } from 'lucide-react-native/icons/circle-check';
+export { default as ChevronDown } from 'lucide-react-native/icons/chevron-down';
 export { default as ChevronRight } from 'lucide-react-native/icons/chevron-right';
 export { default as CircleDot } from 'lucide-react-native/icons/circle-dot';
 export { default as Cloud } from 'lucide-react-native/icons/cloud';
@@ -18,6 +19,8 @@ export { default as CloudDownload } from 'lucide-react-native/icons/cloud-downlo
 export { default as CloudOff } from 'lucide-react-native/icons/cloud-off';
 export { default as Coffee } from 'lucide-react-native/icons/coffee';
 export { default as Compass } from 'lucide-react-native/icons/compass';
+export { default as Eye } from 'lucide-react-native/icons/eye';
+export { default as EyeOff } from 'lucide-react-native/icons/eye-off';
 export { default as Feather } from 'lucide-react-native/icons/feather';
 export { default as GraduationCap } from 'lucide-react-native/icons/graduation-cap';
 export { default as HardDrive } from 'lucide-react-native/icons/hard-drive';
@@ -33,6 +36,7 @@ export { default as Pin } from 'lucide-react-native/icons/pin';
 export { default as Play } from 'lucide-react-native/icons/play';
 export { default as Plus } from 'lucide-react-native/icons/plus';
 export { default as RefreshCw } from 'lucide-react-native/icons/refresh-cw';
+export { default as Search } from 'lucide-react-native/icons/search';
 export { default as Settings } from 'lucide-react-native/icons/settings';
 export { default as Settings2 } from 'lucide-react-native/icons/settings-2';
 export { default as ShieldCheck } from 'lucide-react-native/icons/shield-check';

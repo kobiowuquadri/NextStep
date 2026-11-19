@@ -113,7 +113,7 @@ interface Device {
 
 async function signUp() {
   const email = `device-${randomUUID().slice(0, 8)}@example.test`;
-  const r = await request(app.getHttpServer()).post('/v1/auth/register').send({ email, password: 'a long enough password', displayName: 'Tobi', timezone: 'Africa/Lagos' }).expect(201);
+  const r = await request(app.getHttpServer()).post('/v1/auth/register').send({ email, password: 'a long enough password', displayName: 'Quadri', timezone: 'Africa/Lagos' }).expect(201);
   await mobile.api.tokenStore.set(r.body.user.id, { accessToken: r.body.accessToken, refreshToken: r.body.refreshToken, accessTokenExpiresAt: r.body.accessTokenExpiresAt });
   return { userId: r.body.user.id as string, email, refresh: r.body.refreshToken as string };
 }

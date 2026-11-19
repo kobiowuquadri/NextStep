@@ -2,7 +2,7 @@
   "expo": {
     "name": "NextStep",
     "slug": "nextstep",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "nextstep",
@@ -17,7 +17,6 @@
     },
     "android": {
       "package": "com.teamapex.nextstep",
-      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#5534F0",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

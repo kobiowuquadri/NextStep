@@ -267,7 +267,7 @@ describe('server-authoritative XP', () => {
 describe('planning and Recovery Mode (no AI required)', () => {
   let u: TestUser;
   beforeAll(async () => {
-    u = await registerUser(app, 'Tobi');
+    u = await registerUser(app, 'Quadri');
     const avail = [0, 1, 2, 3, 4, 5, 6].map((weekday) => {
       const id = randomUUID();
       return op('availability', id, { id, weekday, start: '19:00', end: '21:30', online: true, label: null, createdAt: iso(), updatedAt: iso() });

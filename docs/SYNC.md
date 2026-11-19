@@ -98,7 +98,7 @@ Header badge and Profile → Sync: *Saved on this phone* (guest/sample), *Synced
 
 ## Measured payload sizes
 
-Measured against the local API with `apps/api/scripts/measure-sync.ts` (fictional Tobi semester, gzip on responses):
+Measured against the local API with `apps/api/scripts/measure-sync.ts` (fictional Quadri semester, gzip on responses):
 
 | Workflow | Upload | Download |
 |---|---|---|

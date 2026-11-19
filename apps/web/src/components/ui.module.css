@@ -79,6 +79,14 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+/* Long eyebrows stay on one line on phones; if they still wrap, the pill becomes a rounded box. */
+@media (max-width: 440px) {
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    border-radius: var(--ns-radius-md);
+  }
+}
 .eyebrow_energy {
   background: var(--ns-energy-soft);
   color: var(--ns-energy-text);

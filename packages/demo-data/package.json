@@ -2,7 +2,7 @@
   "name": "@nextstep/demo-data",
   "version": "1.0.0",
   "private": true,
-  "description": "Fictional demo scenarios (Tobi) and original sample learning resources. Never imported by production data paths.",
+  "description": "Fictional demo scenarios (Quadri) and original sample learning resources. Never imported by production data paths.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

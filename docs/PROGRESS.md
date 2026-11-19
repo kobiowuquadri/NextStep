@@ -11,7 +11,7 @@ Mapped to the sections of the product brief. ✅ done and tested (automated or m
 - ✅ 5 Recovery Mode and gamification
 - ✅ 6 Backend persistence and offline sync
 - ✅ 7 Remaining mobile screens and resources
-- ✅ 8 Website and browser demo (built first, at the team’s request)
+- ✅ 8 Website (built first, at the team’s request); the browser demo was later replaced by the narrated video and the APK download
 - ✅ 9 Functional, security and visual checks
 - ✅ 10 Deployment and handoff documentation
 
@@ -19,10 +19,10 @@ Mapped to the sections of the product brief. ✅ done and tested (automated or m
 
 | Deliverable | Status |
 |---|---|
-| React Native app, Android first | ✅ Android: emulator QA in Expo Go and a locally built release APK (66.1 MB) · 🟡 iOS not built or tested |
+| React Native app, Android first | ✅ Android: signed EAS APK published on the website (see TESTING.md) · 🟡 iOS not built or tested |
 | Responsive informative website | ✅ 9 pages + reset-password page, desktop and mobile e2e tests |
 | Backend API and database | ✅ NestJS + PostgreSQL, integration tests on real PostgreSQL |
-| Browser demo with fictional data and reset | ✅ `/demo/interactive` (and a narrated video of the real app at `/demo`) |
+| Demo with fictional data | ✅ narrated video of the real app at `/demo`, next to the APK download (the interactive browser demo was removed on 18 Nov) |
 | Docs, env examples, seed data, deployment instructions | ✅ `README.md`, `docs/`, `.env.example` ×3, `prisma/seed.ts`, Dockerfile |
 | Original brand and design system | ✅ tokens, mascot, illustrations, badges |
 
@@ -45,10 +45,10 @@ Mapped to the sections of the product brief. ✅ done and tested (automated or m
 | §18 AI features | 🟡 🔑 | Implemented with schema validation and fallback; tested with a stubbed provider only — no live provider call was made |
 | §19 Learning resources | ✅ | 4 original resources, size shown before download, download/view/delete, not educator-reviewed |
 | §20 Website | ✅ | All listed pages and home sections; real screenshots only |
-| §21 Browser demo | ✅ | Guided steps, overloaded-week toggle, reset |
+| §21 Browser demo | Removed | Replaced by the narrated video of the real app and the Android APK download (18 Nov) |
 | §22 Accessibility, privacy, performance | ✅ / 🟡 | Labels, focus states, reduced motion, quiet hours, colour-independent status; screen-reader pass with TalkBack/VoiceOver **not** done |
 | §23 Tests | ✅ | See [TESTING.md](TESTING.md) |
-| §24 Tobi scenario | ✅ | Automated (`scenario.test.ts`, `mobile-sync.test.ts`) and manual on emulator |
+| §24 Quadri scenario (renamed from Tobi, 18 Nov) | ✅ | Automated (`scenario.test.ts`, `mobile-sync.test.ts`) and manual on emulator |
 | §26 Handoff | ✅ | This `docs/` folder |
 
 ## Deferred

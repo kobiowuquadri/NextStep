@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useId, useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, Smartphone, X } from 'lucide-react';
 import { logoMarkSvg } from '@nextstep/illustrations';
 import { nav } from '@/lib/site';
 import styles from './site.module.css';
@@ -48,6 +48,9 @@ export function SiteHeader() {
           <Link href="/demo" className={styles.demoBtn}>
             Watch the demo
           </Link>
+          <Link href="/demo#download" className={styles.appBtn}>
+            <Smartphone aria-hidden size={18} /> Get the app
+          </Link>
           <button className={styles.menuBtn} aria-expanded={open} aria-controls={menuId} onClick={() => setOpen((o) => !o)}>
             {open ? <X aria-hidden size={22} /> : <Menu aria-hidden size={22} />}
             <span className="visually-hidden">{open ? 'Close menu' : 'Open menu'}</span>
@@ -65,6 +68,9 @@ export function SiteHeader() {
           ))}
           <li>
             <Link href="/demo">Watch the demo</Link>
+          </li>
+          <li>
+            <Link href="/demo#download">Download the Android app</Link>
           </li>
         </ul>
       </nav>

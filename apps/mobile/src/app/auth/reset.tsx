@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { publicRequest } from '../../lib/api';
 import { Button, Card, Field, Notice, Screen, T } from '../../ui/kit';
 import { authErrorMessage } from '../../lib/format';
+import { looksLikeEmail, PasswordField } from '../../ui/PasswordField';
 
 /** Two steps: request an emailed code, then set a new password with it. */
 export default function Reset() {
@@ -22,11 +23,11 @@ export default function Reset() {
         <Card>
           {error && <Notice tone="danger">{error}</Notice>}
           <T color="textSecondary">Enter your account email. If it exists, we’ll send a reset link with a code. It works for 30 minutes.</T>
-          <Field label="Email" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
+          <Field label="Email" value={email} onChangeText={setEmail} autoCapitalize="none" autoCorrect={false} keyboardType="email-address" autoComplete="email" />
           <Button
             label="Send reset link"
             loading={busy}
-            disabled={!email}
+            disabled={!looksLikeEmail(email)}
             onPress={async () => {
               setBusy(true);
               setError(null);
@@ -48,7 +49,7 @@ export default function Reset() {
           {msg && <Notice>{msg}</Notice>}
           {error && <Notice tone="danger">{error}</Notice>}
           <Field label="Reset code" value={token} onChangeText={setToken} autoCapitalize="none" hint="Paste the code from the email link." />
-          <Field label="New password" value={password} onChangeText={setPassword} secureTextEntry hint="At least 10 characters." />
+          <PasswordField label="New password" value={password} onChangeText={setPassword} autoComplete="new-password" hint="At least 10 characters." />
           <Button
             label="Set new password"
             loading={busy}

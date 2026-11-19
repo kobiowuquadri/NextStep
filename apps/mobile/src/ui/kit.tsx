@@ -1,7 +1,8 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode, type Ref } from 'react';
 import {
   ActivityIndicator,
   Animated,
+  KeyboardAvoidingView,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -10,6 +11,7 @@ import {
   TextInput,
   View,
   type StyleProp,
+  type TextInputInstance,
   type TextInputProps,
   type TextStyle,
   type ViewStyle,
@@ -115,15 +117,19 @@ export function Card({ children, tone = 'surface', style, onPress, accessibility
 export function Screen({ children, scroll = true, padded = true, refreshControl, testID }: { children: ReactNode; scroll?: boolean; padded?: boolean; refreshControl?: React.ReactElement<any>; testID?: string }) {
   const { c } = useTheme();
   const inner = <View style={{ padding: padded ? 18 : 0, gap: 16, paddingBottom: 40 }}>{children}</View>;
+  // Edge-to-edge Android doesn't resize the window for the keyboard, so pad the content instead
+  // and let the focused field scroll into view.
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1, backgroundColor: c.canvas }} testID={testID}>
-      {scroll ? (
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled" refreshControl={refreshControl as never}>
-          {inner}
-        </ScrollView>
-      ) : (
-        inner
-      )}
+      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+        {scroll ? (
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" refreshControl={refreshControl as never}>
+            {inner}
+          </ScrollView>
+        ) : (
+          inner
+        )}
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -249,20 +255,34 @@ export function SectionLabel({ children, right }: { children: ReactNode; right?:
   );
 }
 
-export function Field({ label, error, hint, ...input }: TextInputProps & { label: string; error?: string | null; hint?: string }) {
+export function Field({ label, error, hint, right, ref, ...input }: TextInputProps & { label: string; error?: string | null; hint?: string; right?: ReactNode; ref?: Ref<TextInputInstance> }) {
   const { c } = useTheme();
+  const box = { minHeight: 50, borderRadius: radius.md, borderWidth: 2, borderColor: error ? c.danger : c.borderStrong, backgroundColor: c.surface };
+  const text = { color: c.textPrimary, paddingHorizontal: 14, paddingVertical: 10, fontFamily: fontFor('body'), fontSize: 16 };
+  const field = (
+    <TextInput
+      ref={ref}
+      accessibilityLabel={label}
+      accessibilityHint={error ?? undefined}
+      placeholderTextColor={c.textMuted}
+      maxFontSizeMultiplier={1.6}
+      {...input}
+      style={[right ? { flex: 1, minHeight: 46, ...text } : { ...box, ...text }, input.style]}
+    />
+  );
   return (
     <View style={{ gap: 6 }}>
       <T variant="small" weight="700">
         {label}
       </T>
-      <TextInput
-        accessibilityLabel={label}
-        placeholderTextColor={c.textMuted}
-        maxFontSizeMultiplier={1.6}
-        {...input}
-        style={[{ minHeight: 50, borderRadius: radius.md, borderWidth: 2, borderColor: error ? c.danger : c.borderStrong, backgroundColor: c.surface, color: c.textPrimary, paddingHorizontal: 14, paddingVertical: 10, fontFamily: fontFor('body'), fontSize: 16 }, input.style]}
-      />
+      {right ? (
+        <View style={[box, { flexDirection: 'row', alignItems: 'center' }]}>
+          {field}
+          {right}
+        </View>
+      ) : (
+        field
+      )}
       {error ? (
         <T variant="small" color="dangerText" accessibilityRole="text">
           {error}

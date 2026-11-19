@@ -43,7 +43,7 @@
 .tab {
   position: relative;
   overflow: hidden;
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 14px;
   border-radius: var(--ns-radius-pill);
   border: 2px solid var(--ns-border-strong);
@@ -85,8 +85,8 @@
 .toggle {
   display: inline-grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: 2px solid var(--ns-border-strong);
   background: var(--ns-surface);

@@ -17,13 +17,13 @@ import {
 } from '@nextstep/engine';
 
 export const DEMO_TIMEZONE = 'Africa/Lagos';
-export const DEMO_USER_ID = stableUuid('demo', 'tobi');
-export const DEMO_LABEL = 'Fictional demo data — Tobi is not a real student.';
+export const DEMO_USER_ID = stableUuid('demo', 'quadri');
+export const DEMO_LABEL = 'Fictional demo data — Quadri is not a real student.';
 
-const id = (name: string) => stableUuid('tobi', name);
+const id = (name: string) => stableUuid('quadri', name);
 
 function ctxAt(now: number, seq: { n: number }): Ctx {
-  return { now, newId: () => stableUuid('tobi-gen', ++seq.n) };
+  return { now, newId: () => stableUuid('quadri-gen', ++seq.n) };
 }
 
 function run(state: AppState, r: ActionResult | { error: string }): AppState {
@@ -45,11 +45,11 @@ export interface ScenarioOptions {
 }
 
 /**
- * Tobi: a fictional second-year student in Lagos who works part-time shifts
+ * Quadri: a fictional second-year student in Lagos who works part-time shifts
  * and commutes by bus. Built relative to `now` so the demo week is always
  * current. Includes a missed session from yesterday evening.
  */
-export function buildTobiScenario(now: number, opts: ScenarioOptions = {}): AppState {
+export function buildQuadriScenario(now: number, opts: ScenarioOptions = {}): AppState {
   const tz = DEMO_TIMEZONE;
   const seq = { n: 0 };
   const today = localDateKey(now, tz);
@@ -58,7 +58,7 @@ export function buildTobiScenario(now: number, opts: ScenarioOptions = {}): AppS
   const setupTime = instantAt(addDaysToKey(today, -3), '09:00', tz);
   const c = (t: number) => ctxAt(t, seq);
 
-  let s = emptyState(DEMO_USER_ID, { ...newPreferences(id('prefs'), 'Tobi', tz, setupTime), dailyLimitMinutes: 120, institution: null, programme: 'Computer Science (fictional)', onboardingCompletedAt: new Date(setupTime).toISOString() });
+  let s = emptyState(DEMO_USER_ID, { ...newPreferences(id('prefs'), 'Quadri', tz, setupTime), dailyLimitMinutes: 120, institution: null, programme: 'Computer Science (fictional)', onboardingCompletedAt: new Date(setupTime).toISOString() });
 
   const csc = id('course-csc');
   const mth = id('course-mth');
@@ -106,7 +106,7 @@ export function buildTobiScenario(now: number, opts: ScenarioOptions = {}): AppS
     s = run(s, createTask(s, { id: id('task-group'), title: 'Group project report', kind: 'project', courseId: gst, importance: 4, estimatedMinutes: 600, dueAt: new Date(instantAt(addDaysToKey(today, 2), '17:00', tz)).toISOString() }, c(setupTime)));
   }
 
-  // Two days ago: Tobi finished the first step and logged a focus session.
+  // Two days ago: Quadri finished the first step and logged a focus session.
   const step1 = s.subtasks.find((x) => x.taskId === assignment && x.position === 0)!;
   const histStart = instantAt(twoDaysAgo, '19:00', tz);
   s = run(s, toggleSubtask(s, step1.id, true, c(histStart + 40 * 60000)));

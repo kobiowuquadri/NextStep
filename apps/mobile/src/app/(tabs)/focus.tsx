@@ -126,6 +126,11 @@ export default function Focus() {
       <T color="textSecondary">An optional timer. You can also log time without it.</T>
       <Card>
         <T variant="h3">What are you working on?</T>
+        {upcoming.length > 0 && (
+          <T variant="small" color="textMuted">
+            Tap a session to focus on it, or start a free focus block.
+          </T>
+        )}
         {upcoming.length === 0 && (
           <T variant="small" color="textMuted">
             No planned sessions right now. You can still start a free focus block.
@@ -161,7 +166,7 @@ export default function Focus() {
         />
         <Choice label="Break" value={rest} options={[5, 10, 15].map((m) => ({ value: m, label: `${m} min` }))} onChange={setRest} />
         <Button
-          label="Start"
+          label={chosen ? 'Start focus' : 'Start a free focus block'}
           icon={<Play size={18} color={c.textOnPrimary} />}
           onPress={async () => {
             await notificationPermission(true);

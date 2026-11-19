@@ -6,7 +6,8 @@ import * as Sharing from 'expo-sharing';
 import { authedRequest } from '../../lib/api';
 import { authErrorMessage } from '../../lib/format';
 import { useApp } from '../../lib/store';
-import { Button, Card, Field, Notice, Screen, SectionLabel, T } from '../../ui/kit';
+import { Button, Card, Notice, Screen, SectionLabel, T } from '../../ui/kit';
+import { PasswordField } from '../../ui/PasswordField';
 
 export default function Privacy() {
   const { account, state, signOut, deleteAccount, syncNow } = useApp();
@@ -82,7 +83,7 @@ export default function Privacy() {
             Delete account
           </T>
           <T variant="small">This permanently deletes your account and all its data from our servers and from this phone. It can’t be undone. Export first if you want a copy.</T>
-          <Field label="Confirm with your password" value={password} onChangeText={setPassword} secureTextEntry />
+          <PasswordField label="Confirm with your password" value={password} onChangeText={setPassword} autoComplete="current-password" />
           <Button
             label="Delete my account"
             variant="danger"

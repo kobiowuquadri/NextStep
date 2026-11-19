@@ -137,8 +137,11 @@ export default function HowItWorksPage() {
           ))}
         </div>
         <div className={styles.ctaRow}>
-          <ButtonLink href="/demo/interactive" size="lg">
-            Try Recovery Mode <ArrowRight size={20} aria-hidden />
+          <ButtonLink href="/demo" size="lg">
+            See it in the demo video <ArrowRight size={20} aria-hidden />
+          </ButtonLink>
+          <ButtonLink href="/demo#download" variant="secondary" size="lg">
+            Get the Android app
           </ButtonLink>
         </div>
       </Section>

@@ -5,7 +5,7 @@ Nothing has been deployed or published by the development team: no hosting, doma
 ```
  Students' phones ──HTTPS──►  API container (Docker)  ──►  Managed PostgreSQL 15+
  Browsers ──HTTPS──► Website (Next.js, mostly static)        (backups, TLS)
-                     └ /demo (video) and /demo/interactive run without the API or an account
+                     └ /demo (video + APK download) works without the API or an account
 ```
 
 | Component | Recommended target | What it needs |
@@ -93,25 +93,20 @@ Environment (all public — **never put secrets in `NEXT_PUBLIC_*`**):
 | Variable | Purpose |
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata, sitemap and social cards. |
-| `NEXT_PUBLIC_ANDROID_URL` | Google Play listing, once it exists. |
-| `NEXT_PUBLIC_APK_URL` | Direct APK download (e.g. a GitHub release asset), if you publish one. |
-| `NEXT_PUBLIC_IOS_URL` | App Store listing, once it exists. |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | A real team contact address. Omitted from the site when empty. |
 
-While the download variables are empty the site states honestly that the app isn’t available to download yet and points to the demo video and the browser demo. Rebuild after changing them (they are inlined at build time).
-
-The browser demo needs no configuration: it uses fictional data and stores changes only in the visitor’s browser.
+**Publishing a new APK on the website**: build it with EAS (step 3 below), download the `.apk`, then run `node apps/web/scripts/publish-apk.mjs <file.apk>`. It reads the version and minimum Android version from the APK (with `aapt2` from the Android SDK build-tools), copies it to `apps/web/public/downloads/NextStep-<version>.apk` (removing older copies), and writes `apps/web/src/lib/release.json` with the size and SHA-256. Commit both and redeploy; every “Download Android APK” button and the install steps update from that file. The APK is under GitHub’s 100 MB file limit because the `preview` profile builds only the two phone CPU types (`armeabi-v7a`, `arm64-v8a`). Until `release.json` says `available: true`, the site says plainly that the app isn’t published yet.
 
 Before launch, review `apps/web/src/app/privacy` and `terms` with whoever operates the service — they describe the implemented data handling but are not legal advice — and fill in the operator’s identity and contact.
 
 ## 4. Android app
 
-1. Set the production URLs in `apps/mobile/eas.json` (`preview` and `production` profiles): `EXPO_PUBLIC_API_URL=https://api.example.org`, `EXPO_PUBLIC_SITE_URL=https://nextstep.example.org`. These are public values; no secrets belong in the app.
+1. Set the production URLs in `apps/mobile/eas.json` (`preview` and `production` profiles): `EXPO_PUBLIC_API_URL` and `EXPO_PUBLIC_SITE_URL` (currently `https://nextstep-1nuf.onrender.com` and `https://nextstep-two-sandy.vercel.app`). These are public values; no secrets belong in the app.
 2. `cd apps/mobile && npx eas-cli login && npx eas-cli init` (links the project to your Expo account; adds the project ID to `app.json`).
-3. Test build (installable APK): `npx eas-cli build --platform android --profile preview`.
+3. Installable APK for the website: `npx eas-cli build --platform android --profile preview`. The profile increments the build number on EAS, so each APK installs over the previous one and keeps the user’s data; the version name comes from `app.json` (`expo.version`).
 4. Store build (AAB): `npx eas-cli build --platform android --profile production`. EAS creates and stores the upload keystore — keep a backup.
 5. Upload to Google Play Console (internal testing track first). The Play listing needs: privacy policy URL (`/privacy` on the website), data-safety answers (account email, display name, study data; encrypted in transit; deletion available in-app), screenshots captured from the real app, content rating.
-6. Put the Play listing URL in `NEXT_PUBLIC_ANDROID_URL` and redeploy the website.
+6. Add the Play listing link to the website’s download section (`apps/web/src/components/ApkDownload.tsx`) and redeploy.
 
 **Local release builds on Windows**: React Native’s native (CMake/ninja) builds exceed Windows’ 260-character path limit when the repository is deep (e.g. under `Desktop\…`). EAS Build (Linux) avoids this entirely. What worked locally:
 

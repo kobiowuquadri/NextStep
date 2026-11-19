@@ -5,7 +5,7 @@ NextStep is a **modular monolith**: one API process, one database, two clients, 
 ```
                 ┌───────────────────────── packages/ (pure TypeScript) ─────────────────────────┐
                 │ contracts → scheduler → gamification → engine ← demo-data   design-tokens     │
-                │   (Zod)     (planner,    (XP, quests,   (domain     (Tobi,      illustrations    │
+                │   (Zod)     (planner,    (XP, quests,   (domain     (Quadri,    illustrations    │
                 │             Recovery)    badges)        actions)   resources)  (SVG strings)    │
                 └───────────────┬─────────────────────────┬─────────────────────────┬───────────┘
                                 │                         │                         │
@@ -26,7 +26,7 @@ NextStep is a **modular monolith**: one API process, one database, two clients, 
 | `engine` | Pure domain actions over an in-memory `AppState` (create/update/delete, generate plan, accept/undo recovery, log focus, reflections, goals…). Each returns the new state **plus a list of record mutations** that the caller persists and syncs. Awards, quests and achievements are evaluated in one place. |
 | `design-tokens` | Palette and semantic light/dark tokens (contrast-tested), type scale, spacing, motion; emits `tokens.css` for the web. |
 | `illustrations` | The original mascot “Nex” (7 poses, 6 skins, 7 accessories), scenes and badges as SVG strings, rendered by `react-native-svg` on mobile and inline on the web. |
-| `demo-data` | The fictional Tobi scenario (built relative to “now”) and four original sample learning resources. Imported only by demo/sample code paths and the opt-in seed. |
+| `demo-data` | The fictional Quadri scenario (built relative to “now”) and four original sample learning resources. Imported only by demo/sample code paths and the opt-in seed. |
 
 ## Mobile app (`apps/mobile`)
 
@@ -36,7 +36,7 @@ NextStep is a **modular monolith**: one API process, one database, two clients, 
 - **Sync**: `src/lib/sync.ts` — see [SYNC.md](SYNC.md).
 - **Notifications**: local only (`expo-notifications`), rescheduled whenever the plan changes, respecting quiet hours. Remote push is not used.
 - **Focus timer**: stored as timestamps in SQLite, so it survives navigation, backgrounding and process death.
-- **Modes**: signed-in account (syncs) and guest (this phone only). The fictional sample semester was removed from the app on 11 Nov 2026; it remains in the website's browser demo.
+- **Modes**: signed-in account (syncs) and guest (this phone only). The fictional sample semester was removed from the app on 11 Nov 2026. For screenshots and the demo video it is loaded into a temporary test account through the normal sync API (`apps/api/scripts/sample-account.ts`).
 
 ## API (`apps/api`)
 
@@ -51,8 +51,7 @@ NextStep is a **modular monolith**: one API process, one database, two clients, 
 ## Website (`apps/web`)
 
 - **Next.js 16** App Router, all pages statically prerendered, CSS Modules on top of the generated design tokens, Lucide icons, `next/font` for Bricolage Grotesque + Plus Jakarta Sans.
-- **Demo video** (`/demo`): a narrated walkthrough of the real Android app, built from emulator footage with the Remotion project in `video/` (see its README).
-- **Browser demo** (`/demo/interactive`): a client-only app using the same engine/scheduler/gamification packages, with fictional data, a simulated Lagos clock, `localStorage` persistence and a reset button. It never talks to the API.
+- **Demo & download** (`/demo`): a narrated walkthrough of the real Android app, built from emulator footage with the Remotion project in `video/` (see its README), next to the Android APK download. The APK is served by the website itself from `public/downloads/`; `scripts/publish-apk.mjs` copies a build there and writes `src/lib/release.json` (version, size, SHA-256, minimum Android) from the APK. The browser demo that used to live at `/demo/interactive` was removed on 18 Nov 2026.
 
 ## Key decisions
 

@@ -30,7 +30,7 @@ import { Art, ButtonLink, Card, Eyebrow, IconChip, Section, SectionHead, reveal 
 import { PhoneShot } from '@/components/PhoneShot';
 import { ScreenCycler } from '@/components/ScreenCycler';
 import { FaqList, FAQ } from '@/components/Faq';
-import { DownloadAvailability } from '@/components/DownloadAvailability';
+import { apk, ApkButton } from '@/components/ApkDownload';
 import { SCREENS } from '@/lib/screens';
 import styles from './home.module.css';
 
@@ -87,11 +87,21 @@ export default function HomePage() {
               <strong>Recovery Mode</strong> rebuilds it around the time you really have.
             </p>
             <div className={`${styles.heroCtas} rise`} style={d(4)}>
-              <ButtonLink href="/demo" size="lg">
-                <Play size={20} aria-hidden /> Watch the demo
-              </ButtonLink>
-              <ButtonLink href="/features" variant="secondary" size="lg">
-                Explore the app
+              {apk.available ? (
+                <ApkButton />
+              ) : (
+                <ButtonLink href="/demo" size="lg">
+                  <Play size={20} aria-hidden /> Watch the demo
+                </ButtonLink>
+              )}
+              <ButtonLink href={apk.available ? '/demo' : '/features'} variant="secondary" size="lg">
+                {apk.available ? (
+                  <>
+                    <Play size={20} aria-hidden /> Watch the demo
+                  </>
+                ) : (
+                  'Explore the app'
+                )}
               </ButtonLink>
             </div>
             <ul className={`${styles.heroFacts} rise`} style={d(5)}>
@@ -106,7 +116,13 @@ export default function HomePage() {
               </li>
             </ul>
             <p className={`${styles.heroNote} rise`} style={d(6)}>
-              A short narrated walkthrough of the real app. Prefer to click? <Link href="/demo/interactive">Try the interactive demo</Link>, no sign-up.
+              {apk.available ? (
+                <>
+                  {apk.label}. <Link href="/demo#download">How to install</Link>
+                </>
+              ) : (
+                'A short narrated walkthrough of the real Android app.'
+              )}
             </p>
           </div>
 
@@ -198,7 +214,7 @@ export default function HomePage() {
           id="screens-title"
           eyebrow="Real screens"
           title="A calm plan, a clear next step."
-          intro="Captured from the NextStep Android app — a release build running on an Android emulator with the fictional sample semester. Not mock-ups."
+          intro="Captured from the NextStep Android release build on an Android emulator, with Quadri’s fictional sample semester loaded into a test account. Not mock-ups."
         />
         <div className={styles.gallery} tabIndex={0} role="region" aria-label="Screens from the NextStep Android app">
           {GALLERY.map((s, i) => (
@@ -222,7 +238,7 @@ export default function HomePage() {
           title="When your plans change, tap one button."
           intro="Recovery Mode is NextStep’s signature moment. It never guilt-trips you and never quietly rewrites your week — you see exactly what changes, and you decide."
         />
-        <ol className={styles.flow}>
+        <ol className={styles.flow} tabIndex={0} aria-label="Recovery Mode in four steps">
           {FLOW.map((f, i) => (
             <li key={f.title} className={styles.flowStep} {...reveal('up', i)}>
               <PhoneShot screen={f.screen} size="sm" sizes="(max-width: 1100px) 230px, 15vw" />
@@ -457,19 +473,19 @@ export default function HomePage() {
         <SectionHead
           id="story-title"
           eyebrow="An illustrative scenario"
-          title="One of Tobi’s evenings."
-          intro="Tobi is fictional — a second-year student in Lagos who works shifts at a print shop and rides the bus home. This is the scenario in the demo video, and you can play it through yourself."
+          title="One of Quadri’s evenings."
+          intro="Quadri is fictional — a second-year student in Lagos who works shifts at a print shop and rides the bus home. This is the scenario in the demo video."
         />
         <ol className={styles.timeline}>
           {[
             ['Yesterday', 'Two planned sessions on the linked-list assignment don’t happen. It was a long day.'],
-            ['Today, 17:45', 'On the bus, Tobi taps “My plans changed → I have less time” and enters 45 minutes for tonight.'],
+            ['Today, 17:45', 'On the bus, Quadri taps “My plans changed → I have less time” and enters 45 minutes for tonight.'],
             [
               '17:46',
-              'NextStep proposes one 45-minute next step for tonight, moves the other sessions later in the week and explains each change. Tobi accepts.',
+              'NextStep proposes one 45-minute next step for tonight, moves the other sessions later in the week and explains each change. Quadri accepts.',
             ],
-            ['That evening', 'Tobi finishes “Implement insert and delete”, checks in, and earns the Back on Track badge — once.'],
-            ['Offline', 'Data runs out mid-week. Edits stay on the phone through restarts and sync once, without duplicates, when Tobi reconnects.'],
+            ['That evening', 'Quadri finishes “Implement insert and delete”, checks in, and earns the Back on Track badge — once.'],
+            ['Offline', 'Data runs out mid-week. Edits stay on the phone through restarts and sync once, without duplicates, when Quadri reconnects.'],
           ].map(([time, text], i) => (
             <li key={time} {...reveal('up', i)}>
               <span className={styles.time}>{time}</span>
@@ -478,8 +494,8 @@ export default function HomePage() {
           ))}
         </ol>
         <div className={styles.storyCta} {...reveal('up')}>
-          <ButtonLink href="/demo/interactive" variant="energy" size="lg">
-            Play Tobi’s week <ArrowRight size={20} aria-hidden />
+          <ButtonLink href="/demo" variant="energy" size="lg">
+            <Play size={20} aria-hidden /> Watch Quadri’s week
           </ButtonLink>
         </div>
       </Section>
@@ -520,17 +536,19 @@ export default function HomePage() {
               Your next step is waiting.
             </h2>
             <p className={styles.ctaText}>
-              Watch the narrated walkthrough of the real app, or <Link href="/demo/interactive">try Recovery Mode yourself</Link> in your browser.
+              {apk.available ? 'Install the Android app, or watch the narrated walkthrough first.' : 'Watch the narrated walkthrough of the real Android app.'}
             </p>
             <div className={styles.heroCtas}>
-              <ButtonLink href="/demo" size="lg">
+              {apk.available && <ApkButton />}
+              <ButtonLink href="/demo" variant={apk.available ? 'secondary' : 'primary'} size="lg">
                 <Play size={20} aria-hidden /> Watch the demo
               </ButtonLink>
-              <ButtonLink href="/features" variant="secondary" size="lg">
-                Explore the app
-              </ButtonLink>
             </div>
-            <DownloadAvailability />
+            {apk.available && (
+              <p className={styles.ctaMeta}>
+                {apk.label} · <Link href="/demo#download">Install steps</Link>
+              </p>
+            )}
           </div>
           <div className={styles.ctaPhones}>
             <PhoneShot screen={SCREENS.todayDone} size="sm" tilt={-6} sizes="200px" />

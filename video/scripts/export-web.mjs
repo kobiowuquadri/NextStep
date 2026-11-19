@@ -13,7 +13,7 @@ mkdirSync(outDir, { recursive: true });
 const timeline = JSON.parse(readFileSync(path.join(root, 'src', 'timeline.generated.json'), 'utf8'));
 const LABELS = {
   intro: 'Welcome',
-  tobi: 'Meet Tobi',
+  quadri: 'Meet Quadri',
   today: 'Today',
   recover: 'Recovery Mode',
   focus: 'Focus',

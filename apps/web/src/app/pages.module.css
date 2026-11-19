@@ -22,6 +22,10 @@
     grid-column: span 2;
   }
 }
+/* Wide cards keep paragraphs to a comfortable line length. */
+.span2 p {
+  max-width: 72ch;
+}
 .stepCard {
   display: grid;
   gap: 12px;

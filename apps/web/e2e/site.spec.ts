@@ -1,6 +1,13 @@
-import { expect, test, type Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import { expect, test } from '@playwright/test';
 
-const PAGES = ['/', '/how-it-works', '/features', '/community', '/about', '/faq', '/privacy', '/terms', '/demo', '/demo/interactive'];
+const PAGES = ['/', '/how-it-works', '/features', '/community', '/about', '/faq', '/privacy', '/terms', '/demo'];
+const release = JSON.parse(readFileSync(new URL('../src/lib/release.json', import.meta.url), 'utf8')) as {
+  available: boolean;
+  version: string;
+  file: string;
+  bytes: number;
+};
 
 test.describe('website', () => {
   for (const path of PAGES) {
@@ -11,36 +18,61 @@ test.describe('website', () => {
       page.on('pageerror', (e) => errors.push(e.message));
       const res = await page.goto(path);
       expect(res?.status()).toBe(200);
-      if (path === '/demo/interactive') await page.getByText('Good evening').waitFor();
       await expect(page.locator('h1')).toHaveCount(1);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
       expect(errors).toEqual([]);
     });
   }
 
-  test('primary and secondary CTAs go to the demo and the app tour', async ({ page }) => {
+  test('calls to action go to the demo video and the download section', async ({ page }) => {
     await page.goto('/');
-    await page
-      .getByRole('link', { name: /Watch the demo/ })
-      .first()
-      .click();
+    await page.getByRole('main').getByRole('link', { name: /Watch the demo/ }).first().click();
     // Client-side navigation can take a few seconds while the suite runs in parallel.
     await expect(page).toHaveURL(/\/demo$/, { timeout: 15_000 });
+    await expect(page.locator('video')).toBeVisible();
     await page.goto('/');
-    await page.getByRole('link', { name: 'Explore the app' }).first().click();
-    await expect(page).toHaveURL(/\/features$/, { timeout: 15_000 });
+    const getApp = page.getByRole('banner').getByRole('link', { name: /Get the app/ });
+    await expect(getApp).toBeVisible();
+    await getApp.click();
+    await expect(page).toHaveURL(/\/demo#download$/, { timeout: 15_000 });
+    await expect(page.locator('#download')).toBeInViewport();
+  });
+
+  test('the interactive demo is gone and nothing links to it', async ({ page, request }) => {
+    expect((await request.get('/demo/interactive')).status()).toBe(404);
+    for (const path of PAGES) {
+      await page.goto(path);
+      await expect(page.locator('a[href*="/demo/interactive"]')).toHaveCount(0);
+      expect(await page.locator('body').innerText(), path).not.toMatch(/interactive demo|Tobi/i);
+    }
   });
 
   test('every internal link resolves', async ({ page, request }) => {
-    await page.goto('/');
-    const hrefs = await page.$$eval('a[href^="/"]', (as) => [...new Set(as.map((a) => a.getAttribute('href')!))]);
-    for (const href of hrefs) expect((await request.get(href)).status(), href).toBe(200);
+    for (const path of ['/', '/demo']) {
+      await page.goto(path);
+      const hrefs = await page.$$eval('a[href^="/"]', (as) => [...new Set(as.map((a) => a.getAttribute('href')!.split('#')[0]!))]);
+      for (const href of hrefs) expect((await request.head(href || '/')).status(), href).toBe(200);
+    }
   });
 
-  test('shows an honest availability message instead of store badges', async ({ page }) => {
-    await page.goto('/');
-    await expect(page.getByText('The mobile apps aren’t published yet.')).toBeVisible();
-    await expect(page.getByText(/Google Play|App Store/)).toHaveCount(0);
+  test('download button links to the APK, with its version and install steps next to the video', async ({ page, request }) => {
+    test.skip(!release.available, 'No APK published yet');
+    for (const path of ['/', '/demo']) {
+      await page.goto(path);
+      const button = page.getByRole('link', { name: 'Download Android APK' }).first();
+      await expect(button).toBeVisible();
+      await expect(button).toHaveAttribute('href', release.file);
+      await expect(button).toHaveAttribute('download', '');
+      await expect(page.getByText(`Version ${release.version}`).first()).toBeVisible();
+    }
+    await expect(page.getByText(/Install anyway/)).toBeVisible();
+    // The video stays on the same page as the download.
+    await expect(page.locator('video')).toHaveCount(1);
+    const res = await request.head(release.file);
+    expect(res.status()).toBe(200);
+    expect(res.headers()['content-type']).toBe('application/vnd.android.package-archive');
+    expect(Number(res.headers()['content-length'])).toBe(release.bytes);
+    await expect(page.getByText(/Google Play badge|App Store badge/)).toHaveCount(0);
   });
 
   test('reset-password shows the code from the link fragment and is not indexed', async ({ page }) => {
@@ -96,7 +128,7 @@ test.describe('website', () => {
     await context.close();
   });
 
-  test('demo page plays the walkthrough video with captions, a transcript and a link to the interactive demo', async ({ page, request }) => {
+  test('demo page plays the walkthrough video with captions and a transcript', async ({ page, request }) => {
     await page.goto('/demo');
     const video = page.locator('video');
     await expect(video).toHaveAttribute('preload', 'metadata');
@@ -108,10 +140,13 @@ test.describe('website', () => {
     expect(res.status()).toBe(200);
     expect(res.headers()['content-type']).toContain('video/mp4');
     const vtt = await request.get((await track.getAttribute('src'))!);
-    expect(await vtt.text()).toMatch(/^WEBVTT/);
+    const captions = await vtt.text();
+    expect(captions).toMatch(/^WEBVTT/);
+    expect(captions).toContain('Quadri');
+    expect(captions).not.toContain('Tobi');
     await expect(page.getByText(/synthetic voice/).first()).toBeVisible();
     await page.getByText('Read the transcript').click();
-    await expect(page.getByText(/Recovery Mode, and focus all work offline after setup/)).toBeVisible();
+    await expect(page.getByText(/Quadri/).first()).toBeVisible();
     // Playwright's bundled Chromium has no H.264 decoder; real Chrome (E2E_CHANNEL=chrome) does.
     const h264 = await video.evaluate((v: HTMLVideoElement) => v.canPlayType('video/mp4; codecs="avc1.640028"') !== '');
     if (h264) {
@@ -122,103 +157,12 @@ test.describe('website', () => {
     } else {
       test.info().annotations.push({ type: 'note', description: 'Browser cannot decode H.264; playback checks skipped.' });
     }
-    await page.getByRole('link', { name: /Try the interactive demo/ }).click();
-    await expect(page).toHaveURL(/\/demo\/interactive$/, { timeout: 15_000 });
   });
 
   test('sitemap and robots exist', async ({ request }) => {
-    expect((await request.get('/sitemap.xml')).status()).toBe(200);
+    const sitemap = await (await request.get('/sitemap.xml')).text();
+    expect(sitemap).toContain('/demo');
+    expect(sitemap).not.toContain('/demo/interactive');
     expect(await (await request.get('/robots.txt')).text()).toContain('Sitemap');
-  });
-});
-
-async function freshDemo(page: Page) {
-  await page.goto('/demo/interactive');
-  await page.evaluate(() => localStorage.removeItem('nextstep-demo-v1'));
-  await page.reload();
-  await page.getByText('Good evening').waitFor();
-}
-
-test.describe('browser demo', () => {
-  test('core flow: less time → accept → next step → Back on Track once', async ({ page }) => {
-    await freshDemo(page);
-    await expect(page.getByText(/Fictional demo data/)).toBeVisible();
-    await page
-      .getByRole('button', { name: /My plans changed/ })
-      .first()
-      .click();
-    await page.getByRole('button', { name: /I have less time/ }).click();
-    await page.getByRole('radio', { name: '45 min' }).check();
-    await page.getByRole('button', { name: /Show me the new plan/ }).click();
-    await expect(
-      page.getByRole('heading', {
-        name: 'You have less time than planned. Here are your options.',
-      }),
-    ).toBeVisible();
-    await expect(page.getByText(/What changes/)).toBeVisible();
-    await page.getByRole('button', { name: 'Accept changes' }).click();
-    await expect(page.getByRole('heading', { name: 'You still have a next step.' })).toBeVisible();
-    await page.getByRole('button', { name: /^Start:/ }).click();
-    await page.getByRole('button', { name: /I did this session/ }).click();
-    await expect(page.getByRole('heading', { name: 'Back on Track' })).toBeVisible();
-    await page.getByRole('button', { name: 'Keep going' }).click();
-    // A level-up may follow the badge.
-    if (await page.getByRole('button', { name: 'Keep going' }).isVisible()) await page.getByRole('button', { name: 'Keep going' }).click();
-    await page.getByRole('button', { name: 'Journey', exact: true }).click();
-    await expect(page.locator('li', { hasText: 'Back on Track' }).getByText('Plans changed and you kept moving.')).toHaveCount(1);
-  });
-
-  test('keep my current plan changes nothing', async ({ page }) => {
-    await freshDemo(page);
-    await page.getByRole('button', { name: 'Plan', exact: true }).click();
-    const before = await page.locator('ul li button').allInnerTexts();
-    await page
-      .getByRole('button', { name: /My plans changed/ })
-      .first()
-      .click();
-    await page.getByRole('button', { name: /I need a lighter day/ }).click();
-    await page.getByRole('button', { name: /Show me the new plan/ }).click();
-    await page.getByRole('button', { name: 'Keep my current plan' }).click();
-    expect(await page.locator('ul li button').allInnerTexts()).toEqual(before);
-  });
-
-  test('add a task, mark a missed session, and reset restores the original state', async ({ page }) => {
-    await freshDemo(page);
-    const original = await page.evaluate(() => JSON.parse(localStorage.getItem('nextstep-demo-v1')!).app.tasks.length);
-    await page
-      .getByRole('button', { name: /Add task/ })
-      .first()
-      .click();
-    await page.getByLabel('Title').fill('Physics lab write-up');
-    await page.getByRole('button', { name: 'Add task' }).last().click();
-    await expect(page.getByText('Physics lab write-up').first()).toBeVisible();
-    await page.getByRole('button', { name: 'Just mark missed' }).click();
-    await expect(page.getByText(/Marked as missed/)).toBeVisible();
-    page.once('dialog', (d) => d.accept());
-    await page.getByRole('button', { name: /Reset demo/ }).click();
-    await page.getByText('Good evening').waitFor();
-    await expect(page.getByText('Physics lab write-up')).toHaveCount(0);
-    expect(await page.evaluate(() => JSON.parse(localStorage.getItem('nextstep-demo-v1')!).app.tasks.length)).toBe(original);
-  });
-
-  test('overloaded week explains the shortfall instead of an impossible plan', async ({ page }) => {
-    await freshDemo(page);
-    await page.getByRole('button', { name: 'Load overloaded week' }).click();
-    await page.getByRole('button', { name: 'Plan', exact: true }).click();
-    await expect(page.getByRole('heading', { name: 'Not everything fits' })).toBeVisible();
-    await expect(page.getByText(/doesn't fit before/).first()).toBeVisible();
-    await expect(page.getByText(/Reduce the scope/).first()).toBeVisible();
-  });
-
-  test('recovery sheet is keyboard accessible and closes with Escape', async ({ page }) => {
-    await freshDemo(page);
-    await page
-      .getByRole('button', { name: /My plans changed/ })
-      .first()
-      .focus();
-    await page.keyboard.press('Enter');
-    await expect(page.getByRole('dialog', { name: 'My plans changed' })).toBeVisible();
-    await page.keyboard.press('Escape');
-    await expect(page.getByRole('dialog', { name: 'My plans changed' })).toHaveCount(0);
   });
 });

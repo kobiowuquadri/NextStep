@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { mascotSvg } from '@nextstep/illustrations';
 import { Art, ButtonLink, Eyebrow, PageHero, Section, SectionHead, reveal } from '@/components/ui';
 import { PhoneShot } from '@/components/PhoneShot';
-import { DownloadAvailability } from '@/components/DownloadAvailability';
+import { ApkDownload } from '@/components/ApkDownload';
 import { SCREENS, type AppScreen } from '@/lib/screens';
 import styles from '../pages.module.css';
 
@@ -89,7 +89,7 @@ export default function FeaturesPage() {
       <PageHero
         eyebrow="Explore the app"
         title="Built around your next step."
-        intro="The NextStep mobile app (Android first, then iOS) works offline after setup and syncs when you reconnect. Every screen on this page is captured from the Android release build with the fictional sample semester — not a mock-up."
+        intro="The NextStep mobile app (Android first, then iOS) works offline after setup and syncs when you reconnect. Every screen on this page is captured from the Android release build with Quadri’s fictional sample semester — not a mock-up."
         art={<Art svg={mascotSvg({ pose: 'welcome', accessory: 'backpack' })} />}
       />
       <Section>
@@ -143,7 +143,7 @@ export default function FeaturesPage() {
             Watch the demo <ArrowRight size={20} aria-hidden />
           </ButtonLink>
         </div>
-        <DownloadAvailability />
+        <ApkDownload id="get-the-app" heading="Try it on your phone" />
       </Section>
     </>
   );

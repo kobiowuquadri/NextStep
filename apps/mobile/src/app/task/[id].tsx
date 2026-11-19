@@ -9,11 +9,11 @@ import { addSubtask, completeTask, createTask, deleteTask, generatePlanAction, l
 import { authedRequest } from '../../lib/api';
 import { useDerived } from '../../lib/derive';
 import { useApp } from '../../lib/store';
+import { KIND_LABEL, taskTitleIdeas } from '../../lib/suggestions';
 import { Button, Card, Choice, Field, ListRow, Notice, Row, Screen, StatusChip, T, Toggle } from '../../ui/kit';
+import { ChoiceOrSelect, DurationPick, SuggestField } from '../../ui/forms';
 import { DatePick, TimePick } from '../../ui/pickers';
 import { useTheme } from '../../ui/theme';
-
-const KIND_LABEL: Record<string, string> = { assignment: 'Assignment', exam: 'Exam / test', revision: 'Revision', reading: 'Reading', project: 'Project', practice: 'Practice', personal: 'Personal' };
 
 export default function TaskScreen() {
   const { c } = useTheme();
@@ -32,8 +32,8 @@ export default function TaskScreen() {
   const [hasDue, setHasDue] = useState(existing ? !!existing.dueAt : true);
   const [dueDate, setDueDate] = useState(due ? localDateKey(due, tz) : addDaysToKey(today, 4));
   const [dueTime, setDueTime] = useState(due ? formatTimeOfDay(due, tz) : '18:00');
-  const [estimate, setEstimate] = useState(String(existing?.estimatedMinutes ?? 60));
-  const [remaining, setRemaining] = useState(String(existing?.remainingMinutes ?? 60));
+  const [estimate, setEstimate] = useState(existing?.estimatedMinutes ?? 60);
+  const [remaining, setRemaining] = useState(existing?.remainingMinutes ?? 60);
   const [importance, setImportance] = useState(existing?.importance ?? 2);
   const [splittable, setSplittable] = useState(existing?.splittable ?? true);
   const [optional, setOptional] = useState(existing?.optional ?? false);
@@ -43,6 +43,7 @@ export default function TaskScreen() {
   const [suggested, setSuggested] = useState<AiBreakdownResponse | null>(null);
   const [aiState, setAiState] = useState<'idle' | 'busy' | string>('idle');
   const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   if (!state || !d) return null;
   if (!isNew && !existing) {
     return (
@@ -65,9 +66,11 @@ export default function TaskScreen() {
   };
 
   const save = async () => {
-    const est = Number(estimate);
+    const est = estimate;
     if (!title.trim()) return setError('Give the task a title.');
-    if (!Number.isFinite(est) || est < 5) return setError('Estimate at least 5 minutes.');
+    if (est < 5) return setError('Estimate at least 5 minutes.');
+    // A step typed but not yet added is kept rather than lost.
+    const pendingStep = newStep.trim();
     const fields = {
       title: title.trim(),
       description: description.trim() || null,
@@ -82,12 +85,21 @@ export default function TaskScreen() {
     };
     const base = currentRevision(state);
     const res = await run(
-      (s, ctx) => withReplan(existing ? updateTask(s, existing.id, { ...fields, remainingMinutes: Math.max(0, Number(remaining) || 0) }, ctx) : createTask(s, fields, ctx, [...steps, ...(suggested?.steps.map((x) => x.title) ?? [])])),
+      (s, ctx) => {
+        if (existing) {
+          const updated = updateTask(s, existing.id, { ...fields, remainingMinutes: Math.max(0, remaining) }, ctx);
+          if ('error' in updated || !pendingStep) return withReplan(updated);
+          const withStep = addSubtask(updated.state, existing.id, pendingStep, ctx);
+          return withReplan('error' in withStep ? updated : { ...withStep, mutations: [...updated.mutations, ...withStep.mutations], awards: [...updated.awards, ...withStep.awards], unlocked: [...updated.unlocked, ...withStep.unlocked] });
+        }
+        return withReplan(createTask(s, fields, ctx, [...steps, ...(pendingStep ? [pendingStep] : []), ...(suggested?.steps.map((x) => x.title) ?? [])]));
+      },
       { batch: state.preferences.planningMode !== 'manual', basePlanRevision: base, toast: existing ? 'Saved · plan updated' : 'Task added · plan updated' },
     );
-    if ('error' in res) return setError('Could not save this task.');
+    if ('error' in res) return setError('Couldn’t save this task. Check the details and try again.');
     router.back();
   };
+  const selectedCourse = courses.find((co) => co.id === courseId);
 
   const suggest = async () => {
     if (!account || account.mode !== 'user') return;
@@ -115,12 +127,15 @@ export default function TaskScreen() {
           ))}
         </Card>
       )}
-      {error && <Notice tone="danger">{error}</Notice>}
       <Card>
-        <Field label="Title" value={title} onChangeText={setTitle} maxLength={140} placeholder="e.g. Lab report 3" />
+        {isNew ? (
+          <SuggestField label="Title" value={title} onChangeText={setTitle} suggestions={taskTitleIdeas(kind, selectedCourse?.code)} max={4} maxLength={140} placeholder="e.g. Lab report 3" />
+        ) : (
+          <Field label="Title" value={title} onChangeText={setTitle} maxLength={140} placeholder="e.g. Lab report 3" />
+        )}
         <Field label="Notes (optional)" value={description ?? ''} onChangeText={setDescription} maxLength={2000} multiline />
-        <Choice label="Type" value={kind} options={TASK_KINDS.filter((k) => k !== 'personal').map((k) => ({ value: k, label: KIND_LABEL[k]! }))} onChange={setKind} />
-        {courses.length > 0 && <Choice label="Course" value={courseId} options={[{ value: '', label: 'None' }, ...courses.map((co) => ({ value: co.id, label: co.code ?? co.title }))]} onChange={setCourseId} />}
+        <Choice label="Type" value={kind} options={TASK_KINDS.filter((k) => k !== 'personal').map((k) => ({ value: k, label: KIND_LABEL[k] }))} onChange={setKind} />
+        {courses.length > 0 && <ChoiceOrSelect label="Course" value={courseId} options={[{ value: '', label: 'No course' }, ...courses.map((co) => ({ value: co.id, label: co.code ?? co.title, hint: co.code ? co.title : undefined }))]} onChange={setCourseId} />}
         <Toggle label="Has a deadline" hint="The real deadline. Sessions are planned before it." value={hasDue} onChange={setHasDue} />
         {hasDue && (
           <>
@@ -129,8 +144,8 @@ export default function TaskScreen() {
             {existing?.dueAt && <T variant="caption" color="textMuted">Currently due {formatInstant(Date.parse(existing.dueAt), tz)}. Only change this if the deadline officially changed.</T>}
           </>
         )}
-        <Field label="Total effort (minutes)" value={estimate} onChangeText={(v) => setEstimate(v.replace(/[^0-9]/g, ''))} keyboardType="number-pad" />
-        {existing && <Field label="Remaining (minutes)" value={remaining} onChangeText={(v) => setRemaining(v.replace(/[^0-9]/g, ''))} keyboardType="number-pad" />}
+        <DurationPick label="Total effort" value={estimate} onChange={setEstimate} presets={[30, 60, 120, 180, 300]} hint="Your best guess for the whole task." />
+        {existing && <DurationPick label="Work left" value={remaining} onChange={setRemaining} presets={[30, 60, 120]} zeroLabel="None left" hint="Updated after each check-in. Set it yourself if your guess changed." />}
         <Choice label="Importance" value={importance} options={[{ value: 1, label: 'Low' }, { value: 2, label: 'Normal' }, { value: 3, label: 'High' }, { value: 4, label: 'Critical' }]} onChange={setImportance} />
         <Toggle label="Can be split into sessions" value={splittable} onChange={setSplittable} />
         <Toggle label="Optional" hint="First to pause when a week is overloaded" value={optional} onChange={setOptional} />
@@ -197,7 +212,19 @@ export default function TaskScreen() {
         </Card>
       )}
 
-      <Button label={existing ? 'Save changes' : 'Add task'} onPress={() => void save()} />
+      {error && <Notice tone="danger">{error}</Notice>}
+      <Button
+        label={existing ? 'Save changes' : 'Add task'}
+        loading={saving}
+        onPress={async () => {
+          setSaving(true);
+          try {
+            await save();
+          } finally {
+            setSaving(false);
+          }
+        }}
+      />
       {existing && existing.status !== 'done' && (
         <Button
           label="Mark complete"

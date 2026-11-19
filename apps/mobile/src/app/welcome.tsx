@@ -61,20 +61,21 @@ export default function Welcome() {
       {guest ? (
         <Card>
           <T variant="h3">What should we call you?</T>
-          <Field label="Display name" value={name} onChangeText={setName} placeholder="e.g. Tobi" autoFocus maxLength={60} />
+          <Field label="Display name" value={name} onChangeText={setName} placeholder="e.g. Quadri" autoCapitalize="words" autoFocus maxLength={60} />
           <T variant="small" color="textMuted">
             Guest mode keeps everything on this phone only. Create an account later to back up and sync.
           </T>
           <Button
             label="Start planning"
             loading={busy}
-            disabled={!name.trim()}
+            disabled={!name.trim() || busy}
             onPress={async () => {
               setBusy(true);
               await startGuest(name.trim(), deviceTimezone());
               router.replace('/onboarding');
             }}
           />
+          <Button label="Back" variant="ghost" onPress={() => setGuest(false)} />
         </Card>
       ) : (
         <View style={{ gap: 12 }}>

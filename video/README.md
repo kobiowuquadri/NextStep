@@ -9,7 +9,7 @@ This folder is a separate npm project, not part of the pnpm workspace, so its de
 | Part | Source |
 |---|---|
 | App screens | Screen recordings of the NextStep **release build** on an Android emulator, with the fictional sample semester. Segments are only trimmed (and the last frame held for a moment); the app content is not edited. Touch indicators come from Android's "Show taps" setting. |
-| Narration | A **synthetic voice**: [Kokoro](https://huggingface.co/hexgrad/Kokoro-82M) (Apache-2.0), voice `af_heart`, run offline. The website says so next to the video. `narration.json` holds the script; `say` is only a pronunciation hint ("Toby" for "Tobi"). |
+| Narration | A **synthetic voice**: [Kokoro](https://huggingface.co/hexgrad/Kokoro-82M) (Apache-2.0), voice `af_heart`, run offline. The website says so next to the video. `narration.json` holds the script; `say` is an optional pronunciation hint (none is needed now: the voice reads “Quadri” as KWAH-dree). |
 | Motion graphics | `src/` (React components rendered by Remotion), using the brand colours, the Bricolage Grotesque and Plus Jakarta Sans fonts (SIL OFL, in `public/fonts`) and the mascot/logo art from `packages/illustrations`. |
 | Captions | Generated from the same script and timeline (`out/captions.vtt`). |
 

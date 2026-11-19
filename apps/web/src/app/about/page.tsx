@@ -42,16 +42,16 @@ export default function AboutPage() {
           <Card revealAs="up" delay={0}>
             <h3 className={styles.h3}>Built</h3>
             <ul className={styles.bullets}>
-              <li>Mobile app (React Native / Expo), Android first</li>
-              <li>Explainable scheduler and Recovery Mode, shared by app and demo</li>
+              <li>Mobile app (React Native / Expo), Android first, downloadable as an APK</li>
+              <li>Explainable scheduler and Recovery Mode that run on the phone, offline</li>
               <li>Backend API with offline sync and conflict handling</li>
-              <li>This website and the browser demo</li>
+              <li>This website and a narrated demo video of the real app</li>
             </ul>
           </Card>
           <Card revealAs="up" delay={1}>
             <h3 className={styles.h3}>Not yet</h3>
             <ul className={styles.bullets}>
-              <li>Published app store releases</li>
+              <li>Google Play and App Store releases, and an iPhone version</li>
               <li>Educator-reviewed learning content</li>
               <li>Partnerships with schools or organisations</li>
               <li>Studies of learning outcomes</li>

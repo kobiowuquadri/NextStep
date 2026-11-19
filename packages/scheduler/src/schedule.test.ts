@@ -34,7 +34,7 @@ function assertInsideWindows(input: PlannerInput, sessions: PlannedSession[]) {
   }
 }
 
-const tobiTasks = () => [
+const quadriTasks = () => [
   task('A', { title: 'Data structures assignment', dueAt: at('2026-11-13', '18:00'), importance: 3, remainingMinutes: 180, estimatedMinutes: 180 }),
   task('B', { title: 'Linear algebra test revision', dueAt: at('2026-11-17', '09:00'), importance: 3, remainingMinutes: 150, estimatedMinutes: 150 }),
   task('C', { title: 'Novel reading', importance: 2, remainingMinutes: 60, optional: true }),
@@ -43,20 +43,20 @@ const tobiTasks = () => [
 
 describe('generatePlan', () => {
   it('places all work without overlaps, inside availability, outside commitments', () => {
-    const input = baseInput({ tasks: tobiTasks() });
+    const input = baseInput({ tasks: quadriTasks() });
     const plan = generatePlan(input);
     expect(plan.shortfall).toBeNull();
     assertNoOverlaps(plan.sessions);
     assertOutsideCommitments(input, plan.sessions);
     assertInsideWindows(input, plan.sessions);
-    for (const t of tobiTasks()) {
+    for (const t of quadriTasks()) {
       const minutes = plan.sessions.filter((s) => s.taskId === t.id).reduce((a, s) => a + s.minutes, 0);
       expect(minutes).toBe(t.remainingMinutes);
     }
   });
 
   it('keeps buffers between sessions and after commitments', () => {
-    const input = baseInput({ tasks: tobiTasks() });
+    const input = baseInput({ tasks: quadriTasks() });
     const plan = generatePlan(input);
     const sorted = [...plan.sessions].sort((a, b) => a.startAt.localeCompare(b.startAt));
     for (let i = 1; i < sorted.length; i++) {
@@ -69,7 +69,7 @@ describe('generatePlan', () => {
   });
 
   it('respects the daily limit and session length bounds', () => {
-    const input = baseInput({ tasks: tobiTasks() });
+    const input = baseInput({ tasks: quadriTasks() });
     const plan = generatePlan(input);
     const perDay = new Map<string, number>();
     for (const s of plan.sessions) {
@@ -81,7 +81,7 @@ describe('generatePlan', () => {
   });
 
   it('respects dependencies: a dependent starts after its prerequisite finishes', () => {
-    const plan = generatePlan(baseInput({ tasks: tobiTasks() }));
+    const plan = generatePlan(baseInput({ tasks: quadriTasks() }));
     const lastA = Math.max(...plan.sessions.filter((s) => s.taskId === 'A').map((s) => Date.parse(s.endAt)));
     const firstD = Math.min(...plan.sessions.filter((s) => s.taskId === 'D').map((s) => Date.parse(s.startAt)));
     expect(firstD).toBeGreaterThan(lastA);
@@ -151,7 +151,7 @@ describe('generatePlan', () => {
   });
 
   it('replaces unpinned planned sessions instead of duplicating them', () => {
-    const input = baseInput({ tasks: tobiTasks() });
+    const input = baseInput({ tasks: quadriTasks() });
     const first = generatePlan(input);
     const again = generatePlan({ ...input, sessions: first.sessions.map((s) => ({ ...s, label: s.label })) });
     expect(again.sessions.length).toBe(first.sessions.length);
@@ -159,8 +159,8 @@ describe('generatePlan', () => {
   });
 
   it('is deterministic: same input, same plan and IDs', () => {
-    const a = generatePlan(baseInput({ tasks: tobiTasks() }));
-    const b = generatePlan(baseInput({ tasks: tobiTasks() }));
+    const a = generatePlan(baseInput({ tasks: quadriTasks() }));
+    const b = generatePlan(baseInput({ tasks: quadriTasks() }));
     expect(a).toEqual(b);
   });
 
@@ -211,7 +211,7 @@ describe('generatePlan', () => {
   });
 
   it('honours a day override that reduces capacity', () => {
-    const input = baseInput({ tasks: tobiTasks(), overrides: [{ date: '2026-11-09', maxMinutes: 45 }] });
+    const input = baseInput({ tasks: quadriTasks(), overrides: [{ date: '2026-11-09', maxMinutes: 45 }] });
     const plan = generatePlan(input);
     const monday = plan.sessions.filter((s) => localDateKey(Date.parse(s.startAt), TZ) === '2026-11-09');
     expect(monday.reduce((a, s) => a + s.minutes, 0)).toBeLessThanOrEqual(45);
@@ -251,7 +251,7 @@ describe('timezones', () => {
 
   it('handles the local midnight boundary: late-night now plans from the next day', () => {
     const now = Date.parse('2026-11-09T22:50:00Z'); // 23:50 Monday in Lagos
-    const plan = generatePlan(baseInput({ now, tasks: tobiTasks() }));
+    const plan = generatePlan(baseInput({ now, tasks: quadriTasks() }));
     expect(localDateKey(Date.parse(plan.sessions[0]!.startAt), TZ)).toBe('2026-11-10');
   });
 });
@@ -277,14 +277,14 @@ describe('buildToday', () => {
     const sessions = [
       session('t1', 'A', at('2026-11-09', '06:00'), at('2026-11-09', '06:45'), { status: 'done' }),
     ];
-    const view = buildToday(baseInput({ tasks: tobiTasks(), sessions }));
+    const view = buildToday(baseInput({ tasks: quadriTasks(), sessions }));
     expect(view.actions).toHaveLength(0);
     expect(view.completedForToday).toBe(true);
   });
 
   it('does not pad to three actions when only one is planned', () => {
     const sessions = [session('t1', 'A', at('2026-11-09', '18:10'), at('2026-11-09', '18:55'))];
-    const view = buildToday(baseInput({ tasks: tobiTasks(), sessions, now: NOW }));
+    const view = buildToday(baseInput({ tasks: quadriTasks(), sessions, now: NOW }));
     expect(view.actions).toHaveLength(1);
     expect(view.actions[0]!.reasons[0]).toMatch(/Due Fri 13 Nov/);
   });
@@ -306,7 +306,7 @@ describe('session labels', () => {
     expect(labels.has('s1')).toBe(false); // past sessions keep their history
     expect(labels.get('s3')).toBe('Read notes');
     expect(labels.get('s4')).toBe('Implement');
-    const view = buildToday(baseInput({ tasks: tobiTasks(), sessions, subtasks, now: NOW }));
+    const view = buildToday(baseInput({ tasks: quadriTasks(), sessions, subtasks, now: NOW }));
     expect(view.actions[0]!.label).toBe('Read notes');
   });
 

@@ -8,10 +8,10 @@
       "seconds": 4.899
     },
     {
-      "id": "tobi",
-      "text": "Meet Tobi. Tobi is fictional: a second-year student who works shifts at a print shop and rides the bus home.",
-      "file": "voice/tobi.wav",
-      "seconds": 6.4
+      "id": "quadri",
+      "text": "Meet Quadri. Quadri is fictional: a second-year student who works shifts at a print shop and rides the bus home.",
+      "file": "voice/quadri.wav",
+      "seconds": 6.677
     },
     {
       "id": "today",
@@ -21,13 +21,13 @@
     },
     {
       "id": "recover1",
-      "text": "When plans change, Tobi taps 'My plans changed', picks 'I have less time', and says forty-five minutes.",
+      "text": "When plans change, Quadri taps 'My plans changed', picks 'I have less time', and says forty-five minutes.",
       "file": "voice/recover1.wav",
-      "seconds": 6.101
+      "seconds": 6.08
     },
     {
       "id": "recover2",
-      "text": "NextStep shows exactly what moves, with a reason for every change. Nothing changes until Tobi accepts.",
+      "text": "NextStep shows exactly what moves, with a reason for every change. Nothing changes until Quadri accepts.",
       "file": "voice/recover2.wav",
       "seconds": 6.805
     },

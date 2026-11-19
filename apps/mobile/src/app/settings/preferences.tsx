@@ -1,19 +1,53 @@
+import { useState } from 'react';
 import { router } from 'expo-router';
 import type { Preferences } from '@nextstep/contracts';
 import { updatePreferences } from '@nextstep/engine';
 import { notificationPermission, rescheduleReminders } from '../../lib/notifications';
 import { useApp } from '../../lib/store';
-import { Button, Card, Choice, Screen, SectionLabel, T, Toggle } from '../../ui/kit';
+import { deviceTimezone } from '../../lib/format';
+import { INSTITUTIONS, timezoneOptions } from '../../lib/suggestions';
+import { Button, Card, Choice, Field, Screen, SectionLabel, T, Toggle } from '../../ui/kit';
+import { SelectField, SuggestField } from '../../ui/forms';
 import { TimePick } from '../../ui/pickers';
 
 export default function PreferencesScreen() {
-  const { state, run, account } = useApp();
+  const { state, run, account, showToast } = useApp();
+  const [name, setName] = useState(state?.preferences.displayName ?? '');
+  const [school, setSchool] = useState(state?.preferences.institution ?? '');
   if (!state) return null;
   const p = state.preferences;
   const set = (patch: Partial<Preferences>) => void run((s, ctx) => updatePreferences(s, patch, ctx), { quiet: true });
+  const profileChanged = (name.trim() && name.trim() !== p.displayName) || school.trim() !== (p.institution ?? '');
   return (
     <Screen>
       <T variant="h1">Preferences</T>
+
+      <SectionLabel>You</SectionLabel>
+      <Card>
+        <Field label="Name" value={name} onChangeText={setName} maxLength={60} autoCapitalize="words" error={!name.trim() ? 'Add a name.' : null} />
+        <SuggestField label="School or programme (optional)" value={school} onChangeText={setSchool} suggestions={INSTITUTIONS} max={6} maxLength={120} autoCapitalize="words" />
+        {profileChanged ? (
+          <Button
+            label="Save name and school"
+            small
+            onPress={() => {
+              set({ displayName: name.trim(), institution: school.trim() || null });
+              showToast('Saved');
+            }}
+          />
+        ) : null}
+        <SelectField
+          label="Timezone"
+          value={p.timezone}
+          options={timezoneOptions(deviceTimezone(), p.timezone)}
+          onChange={(v) => {
+            set({ timezone: v });
+            void rescheduleReminders(useApp.getState().state);
+          }}
+          searchPlaceholder="Search by city"
+          hint="Plans, deadlines and reminders use this timezone."
+        />
+      </Card>
 
       <SectionLabel>Planning</SectionLabel>
       <Card>

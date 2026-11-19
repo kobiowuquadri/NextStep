@@ -54,7 +54,7 @@ Lucide (`lucide-react`, `lucide-react-native`) — ISC licence. Mobile imports i
 |---|---|---|
 | Website copy, in-app copy, docs | Team Apex | Original. |
 | Sample learning resources ×4 (`packages/demo-data/src/resources.ts`) | Written by Team Apex for the demo | **Not reviewed by an educator** — shown as such in the app and site. Licence: to be chosen by the team before public release (stated in the resource metadata). |
-| Tobi scenario (`packages/demo-data/src/tobi.ts`) | Team Apex | **Fictional** person, courses and schedule. Labelled as fictional wherever shown. |
+| Quadri scenario (`packages/demo-data/src/quadri.ts`) | Team Apex | **Fictional** person, courses and schedule. Labelled as fictional wherever shown. |
 
 ## Replacing artwork later
 

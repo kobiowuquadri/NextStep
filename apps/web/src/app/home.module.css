@@ -109,6 +109,12 @@
   flex-wrap: wrap;
   gap: 14px;
 }
+/* On phones the two calls to action stack at the same width. */
+@media (max-width: 520px) {
+  .heroCtas > * {
+    flex: 1 1 100%;
+  }
+}
 .heroFacts {
   list-style: none;
   margin: 0;
@@ -924,6 +930,12 @@
   font-size: 1.2rem;
   color: var(--ns-text-secondary);
   margin-bottom: 22px;
+}
+.ctaMeta {
+  margin: 16px 0 0;
+  color: var(--ns-text-secondary);
+  font-weight: 700;
+  font-size: 0.95rem;
 }
 .ctaPhones {
   display: none;
