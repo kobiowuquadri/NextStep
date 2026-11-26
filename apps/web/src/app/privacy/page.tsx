@@ -55,6 +55,11 @@ export default function PrivacyPage() {
           </ul>
           <h2>The demo video and the app download</h2>
           <p>The demo video, its captions and the Android APK are plain files served with this website. Watching or downloading them sends nothing beyond the normal request for the file.</p>
+          <h2>The waitlist</h2>
+          <p>
+            If you join the waitlist, we store only your email address and the date you joined, to tell you about NextStep updates and its Google Play release.
+            It isn’t linked to an app account and isn’t shared with anyone. Ask us to remove it at any time.
+          </p>
           <h2>This website</h2>
           <p>This site uses no analytics or advertising cookies. If you choose a colour theme, it is remembered in your browser’s local storage.</p>
           <h2>Contact</h2>

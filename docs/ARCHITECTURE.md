@@ -53,6 +53,8 @@ NextStep is a **modular monolith**: one API process, one database, two clients, 
 - **Next.js 16** App Router, all pages statically prerendered, CSS Modules on top of the generated design tokens, Lucide icons, `next/font` for Bricolage Grotesque + Plus Jakarta Sans.
 - **Demo & download** (`/demo`): a narrated walkthrough of the real Android app, built from emulator footage with the Remotion project in `video/` (see its README), next to the Android APK download. The APK is served by the website itself from `public/downloads/`; `scripts/publish-apk.mjs` copies a build there and writes `src/lib/release.json` (version, size, SHA-256, minimum Android) from the APK. The browser demo that used to live at `/demo/interactive` was removed on 18 Nov 2026.
 
+- **Waitlist** (home page): a small form posts `{ email }` to the API’s public `POST /v1/waitlist`, which stores the address once in `WaitlistEntry` (email and date only, not linked to an account) and answers the same way for repeats, so it can’t reveal who signed up. Rate-limited per IP. To read the list: `SELECT email, "createdAt" FROM "WaitlistEntry" ORDER BY "createdAt";` in the Neon SQL editor.
+
 ## Key decisions
 
 - **Local-first**: the phone is the primary copy for a student; the server is the sync hub and backup. Planning, Recovery Mode and XP work fully offline.

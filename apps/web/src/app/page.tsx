@@ -5,7 +5,6 @@ import {
   ArrowRight,
   BookOpenCheck,
   CalendarClock,
-  Check,
   CircleCheck,
   CircleSlash,
   Clock3,
@@ -30,7 +29,7 @@ import { Art, ButtonLink, Card, Eyebrow, IconChip, Section, SectionHead, reveal 
 import { PhoneShot } from '@/components/PhoneShot';
 import { ScreenCycler } from '@/components/ScreenCycler';
 import { FaqList, FAQ } from '@/components/Faq';
-import { apk, ApkButton } from '@/components/ApkDownload';
+import { WaitlistForm } from '@/components/WaitlistForm';
 import { SCREENS } from '@/lib/screens';
 import styles from './home.module.css';
 
@@ -87,43 +86,13 @@ export default function HomePage() {
               <strong>Recovery Mode</strong> rebuilds it around the time you really have.
             </p>
             <div className={`${styles.heroCtas} rise`} style={d(4)}>
-              {apk.available ? (
-                <ApkButton />
-              ) : (
-                <ButtonLink href="/demo" size="lg">
-                  <Play size={20} aria-hidden /> Watch the demo
-                </ButtonLink>
-              )}
-              <ButtonLink href={apk.available ? '/demo' : '/features'} variant="secondary" size="lg">
-                {apk.available ? (
-                  <>
-                    <Play size={20} aria-hidden /> Watch the demo
-                  </>
-                ) : (
-                  'Explore the app'
-                )}
+              <ButtonLink href="/demo#download" size="lg">
+                Get Started <ArrowRight size={20} aria-hidden />
+              </ButtonLink>
+              <ButtonLink href="/demo" variant="secondary" size="lg">
+                <Play size={20} aria-hidden /> Watch the demo
               </ButtonLink>
             </div>
-            <ul className={`${styles.heroFacts} rise`} style={d(5)}>
-              <li>
-                <Check size={16} aria-hidden /> Works offline after setup
-              </li>
-              <li>
-                <Check size={16} aria-hidden /> Explains every change
-              </li>
-              <li>
-                <Check size={16} aria-hidden /> Never moves a real deadline
-              </li>
-            </ul>
-            <p className={`${styles.heroNote} rise`} style={d(6)}>
-              {apk.available ? (
-                <>
-                  {apk.label}. <Link href="/demo#download">How to install</Link>
-                </>
-              ) : (
-                'A short narrated walkthrough of the real Android app.'
-              )}
-            </p>
           </div>
 
           <div className={`${styles.stage} rise`} style={d(2)}>
@@ -507,7 +476,7 @@ export default function HomePage() {
             <SectionHead id="faq-title" eyebrow="FAQ" title="Questions students ask." />
             <p className={styles.moreFaq}>
               <Link href="/faq" className={styles.inlineLink}>
-                All questions <ArrowRight size={16} aria-hidden />
+                See all <ArrowRight size={16} aria-hidden />
               </Link>
             </p>
             <div className={styles.faqMascot} aria-hidden>
@@ -520,8 +489,8 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* 10. CTA */}
-      <Section tone="tint" labelledBy="cta-title">
+      {/* 10. Waitlist */}
+      <Section tone="tint" labelledBy="cta-title" id="waitlist">
         <div className={styles.cta} {...reveal('scale')}>
           <div className={styles.confetti} aria-hidden>
             {Array.from({ length: 12 }, (_, i) => (
@@ -533,26 +502,10 @@ export default function HomePage() {
           </div>
           <div className={styles.ctaCopy}>
             <h2 id="cta-title" className={styles.ctaTitle}>
-              Your next step is waiting.
+              Join the waitlist.
             </h2>
-            <p className={styles.ctaText}>
-              {apk.available ? 'Install the Android app, or watch the narrated walkthrough first.' : 'Watch the narrated walkthrough of the real Android app.'}
-            </p>
-            <div className={styles.heroCtas}>
-              {apk.available && <ApkButton />}
-              <ButtonLink href="/demo" variant={apk.available ? 'secondary' : 'primary'} size="lg">
-                <Play size={20} aria-hidden /> Watch the demo
-              </ButtonLink>
-            </div>
-            {apk.available && (
-              <p className={styles.ctaMeta}>
-                {apk.label} · <Link href="/demo#download">Install steps</Link>
-              </p>
-            )}
-          </div>
-          <div className={styles.ctaPhones}>
-            <PhoneShot screen={SCREENS.todayDone} size="sm" tilt={-6} sizes="200px" />
-            <PhoneShot screen={SCREENS.levelUp} size="sm" tilt={5} sizes="200px" />
+            <p className={styles.ctaText}>Be the first to hear about new features and NextStep’s Google Play release.</p>
+            <WaitlistForm />
           </div>
         </div>
       </Section>

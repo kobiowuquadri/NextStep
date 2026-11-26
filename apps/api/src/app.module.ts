@@ -19,6 +19,7 @@ import { ResourcesController } from './resources/resources.controller.js';
 import { AiController } from './ai/ai.controller.js';
 import { AiService } from './ai/ai.service.js';
 import { HealthController } from './health.controller.js';
+import { WaitlistController } from './waitlist/waitlist.controller.js';
 import { ReferenceDataService } from './reference-data.js';
 
 const config = loadConfig();
@@ -30,7 +31,7 @@ const config = loadConfig();
     }),
   ],
   // CrudController must stay last: its /v1/:collection routes would otherwise shadow specific routes.
-  controllers: [HealthController, AuthController, AccountController, SyncController, PlanningController, ResourcesController, AiController, CrudController],
+  controllers: [HealthController, AuthController, AccountController, SyncController, PlanningController, ResourcesController, AiController, WaitlistController, CrudController],
   providers: [
     { provide: CONFIG, useValue: config },
     PrismaService,

@@ -93,6 +93,7 @@ Environment (all public — **never put secrets in `NEXT_PUBLIC_*`**):
 | Variable | Purpose |
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata, sitemap and social cards. |
+| `NEXT_PUBLIC_API_URL` | The API the home page’s waitlist form posts to. Defaults to `https://nextstep-1nuf.onrender.com`; the API’s `CORS_ORIGINS` must include the website’s address. |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | A real team contact address. Omitted from the site when empty. |
 
 **Publishing a new APK on the website**: build it with EAS (step 3 below), download the `.apk`, then run `node apps/web/scripts/publish-apk.mjs <file.apk>`. It reads the version and minimum Android version from the APK (with `aapt2` from the Android SDK build-tools), copies it to `apps/web/public/downloads/NextStep-<version>.apk` (removing older copies), and writes `apps/web/src/lib/release.json` with the size and SHA-256. Commit both and redeploy; every “Download Android APK” button and the install steps update from that file. The APK is under GitHub’s 100 MB file limit because the `preview` profile builds only the two phone CPU types (`armeabi-v7a`, `arm64-v8a`). Until `release.json` says `available: true`, the site says plainly that the app isn’t published yet.

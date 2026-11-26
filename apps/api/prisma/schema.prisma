@@ -575,3 +575,12 @@ model AiUsage {
 
   @@index([userId, createdAt])
 }
+
+/// People who asked to hear when NextStep is ready (website waitlist). Only the email is kept;
+/// it is not linked to any account.
+model WaitlistEntry {
+  id        String   @id @db.Uuid
+  email     String   @unique
+  source    String   @default("website")
+  createdAt DateTime @default(now())
+}

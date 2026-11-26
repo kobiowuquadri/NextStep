@@ -27,6 +27,9 @@ export const RefreshRequest = z.object({ refreshToken: z.string().min(20).max(20
 export const LogoutRequest = z.object({ refreshToken: z.string().min(20).max(200), allDevices: z.boolean().optional() });
 export const PasswordResetRequest = z.object({ email: Email });
 export const PasswordResetConfirm = z.object({ token: z.string().min(20).max(200), newPassword: Password });
+/** Website waitlist: only an email, to hear when NextStep is ready. */
+export const WaitlistRequest = z.object({ email: Email });
+export type WaitlistRequest = z.infer<typeof WaitlistRequest>;
 
 export const PublicUser = z.object({
   id: z.string(),

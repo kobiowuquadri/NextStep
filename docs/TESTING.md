@@ -7,8 +7,8 @@ Results below were produced on the development machine (Windows 11, Node 24, Chr
 | Suite | Command | Result |
 |---|---|---|
 | Shared packages (unit) | `pnpm test:packages` | **95 passed** (7 packages) |
-| API + offline sync (integration, real PostgreSQL) | `pnpm test:api` | **42 passed** (4 files) |
-| Website e2e (desktop Chrome and Pixel 7 emulation; the browser demo and its tests were removed in 1.1.0) | `pnpm build:web && pnpm test:web` | **40 passed** (19 Nov) |
+| API + offline sync (integration, real PostgreSQL) | `pnpm test:api` | **44 passed** (4 files; 26 Nov, with the waitlist endpoint) |
+| Website e2e (desktop Chrome and Pixel 7 emulation; the browser demo and its tests were removed in 1.1.0) | `pnpm build:web && pnpm test:web` | **44 passed** (26 Nov) |
 | Demo video (narration, captions, audio) | Whisper transcription of every line and of the final soundtrack; loudness and clipping check | **pass** — see [Demo video](#demo-video) |
 | Type checks | `pnpm typecheck` / `tsc --noEmit` in mobile and API | **pass** |
 | Secret scan of client code and built bundles | `pnpm check:secrets` | **pass** — 146 client files scanned (19 Nov) |
@@ -48,14 +48,16 @@ No test was skipped or marked as expected-to-fail. The Docker image itself was n
 - **Mobile sync (real mobile modules)**: `mobile-sync.test.ts` runs the app’s own `db`, `repo`, `sync` and `api` modules on Node’s SQLite against the real API: first sync then offline edits that persist through a simulated restart and sync once without duplicates; a push whose response is lost is retried safely; two phones with concurrent deadline edits keep both versions for the student and deletions stay deleted; duplicate plan generation on two phones doesn’t duplicate sessions; offline XP confirmed once across phones; accounts isolated on a shared phone and local data deleted on sign-out.
 - **AI (stubbed provider, no network)**: student text can’t break out of its data block; every field of an AI draft is validated and clamped; refusals and provider errors fall back with `AI_UNAVAILABLE`; the daily limit is enforced before calling the provider.
 
-## End-to-end tests — website (40 = 20 × 2 viewports, 19 Nov)
+## End-to-end tests — website (44 = 22 × 2 viewports, 26 Nov)
 
 `apps/web/e2e/site.spec.ts` against the production build (`next start`), on desktop Chrome and Pixel 7 emulation:
 
 - All 9 pages return 200, have exactly one `h1`, no console errors or uncaught page errors, and no horizontal scrolling.
+- Home hero: *Get Started* links to the download section and *Watch the demo* to the video, with no fact pills or download button; the FAQ teaser links to all questions with *See all*.
+- Waitlist (with the API mocked, so nothing is stored): the form sends only `{ email }`, confirms with “You’re on the list”, and explains a server error.
 - Calls to action: *Watch the demo* opens `/demo` with the video; the header's *Get the app* lands on the download section. Every internal link on the home and demo pages resolves; sitemap and robots exist (the sitemap no longer lists `/demo/interactive`).
 - The interactive demo is gone: `/demo/interactive` returns 404 and no page links to or mentions it.
-- Download: on the home and demo pages the *Download Android APK* button links to `release.json`'s file with a `download` attribute, shows the version, the install steps are next to the video, and the APK is served with `application/vnd.android.package-archive` and the exact byte size. (Skipped while no APK is published.)
+- Download: on the demo page the *Download Android APK* button links to `release.json`'s file with a `download` attribute, shows the version, the install steps are next to the video, and the APK is served with `application/vnd.android.package-archive` and the exact byte size. (Skipped while no APK is published.)
 - Reset-password page shows the code from the URL fragment, handles a missing code and is `noindex`.
 - Features page shows at least 20 real app screenshots; every one loads and has alt text.
 - Home hero slideshow: the pause button works and a screen can be chosen by hand.

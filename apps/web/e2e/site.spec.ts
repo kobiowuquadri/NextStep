@@ -55,16 +55,45 @@ test.describe('website', () => {
     }
   });
 
-  test('download button links to the APK, with its version and install steps next to the video', async ({ page, request }) => {
+  test('home hero leads to Get Started and the demo, with no download pills', async ({ page }) => {
+    await page.goto('/');
+    const hero = page.locator('section').first();
+    await expect(hero.getByRole('link', { name: /Get Started/ })).toHaveAttribute('href', '/demo#download');
+    await expect(hero.getByRole('link', { name: /Watch the demo/ })).toHaveAttribute('href', '/demo');
+    await expect(hero.getByText('Works offline after setup')).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Download Android APK' })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: /See all/ })).toHaveAttribute('href', '/faq');
+  });
+
+  test('waitlist form sends only the email and confirms, and explains a failure', async ({ page }) => {
+    let body: unknown = null;
+    await page.route('**/v1/waitlist', async (route) => {
+      body = route.request().postDataJSON();
+      const fail = String((body as { email?: string }).email).startsWith('fail');
+      await route.fulfill({ status: fail ? 500 : 201, contentType: 'application/json', body: JSON.stringify(fail ? { error: { code: 'INTERNAL' } } : { message: 'ok' }) });
+    });
+    await page.goto('/#waitlist');
+    const section = page.locator('#waitlist');
+    await expect(section.getByRole('heading', { name: 'Join the waitlist.' })).toBeVisible();
+    const field = section.getByLabel('Email address');
+    await field.fill('student@example.com');
+    await section.getByRole('button', { name: /Join the waitlist/ }).click();
+    await expect(section.getByRole('status')).toContainText('You’re on the list');
+    expect(body).toEqual({ email: 'student@example.com' });
+    await page.reload();
+    await section.getByLabel('Email address').fill('fail@example.com');
+    await section.getByRole('button', { name: /Join the waitlist/ }).click();
+    await expect(section.getByText(/Something went wrong/)).toBeVisible();
+  });
+
+  test('download button on the demo page links to the APK, with its version and install steps next to the video', async ({ page, request }) => {
     test.skip(!release.available, 'No APK published yet');
-    for (const path of ['/', '/demo']) {
-      await page.goto(path);
-      const button = page.getByRole('link', { name: 'Download Android APK' }).first();
-      await expect(button).toBeVisible();
-      await expect(button).toHaveAttribute('href', release.file);
-      await expect(button).toHaveAttribute('download', '');
-      await expect(page.getByText(`Version ${release.version}`).first()).toBeVisible();
-    }
+    await page.goto('/demo');
+    const button = page.getByRole('link', { name: 'Download Android APK' }).first();
+    await expect(button).toBeVisible();
+    await expect(button).toHaveAttribute('href', release.file);
+    await expect(button).toHaveAttribute('download', '');
+    await expect(page.getByText(`Version ${release.version}`).first()).toBeVisible();
     await expect(page.getByText(/Install anyway/)).toBeVisible();
     // The video stays on the same page as the download.
     await expect(page.locator('video')).toHaveCount(1);

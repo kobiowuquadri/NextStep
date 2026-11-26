@@ -115,33 +115,6 @@
     flex: 1 1 100%;
   }
 }
-.heroFacts {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 10px;
-}
-.heroFacts li {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: var(--ns-radius-pill);
-  background: var(--ns-surface);
-  border: 1.5px solid var(--ns-border);
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-.heroFacts svg {
-  color: var(--ns-success);
-}
-.heroNote {
-  font-size: 0.95rem;
-  color: var(--ns-text-muted);
-}
-
 /* Phone stage */
 .stage {
   position: relative;
@@ -898,11 +871,6 @@
     grid-template-columns: 220px 1fr;
   }
 }
-@media (min-width: 1280px) {
-  .cta {
-    grid-template-columns: 240px 1fr 440px;
-  }
-}
 .ctaArt {
   position: relative;
   max-width: 240px;
@@ -930,29 +898,6 @@
   font-size: 1.2rem;
   color: var(--ns-text-secondary);
   margin-bottom: 22px;
-}
-.ctaMeta {
-  margin: 16px 0 0;
-  color: var(--ns-text-secondary);
-  font-weight: 700;
-  font-size: 0.95rem;
-}
-.ctaPhones {
-  display: none;
-}
-@media (min-width: 1280px) {
-  .ctaPhones {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-    align-items: end;
-    margin: -10px 0 -90px;
-  }
-  .ctaPhones > :last-child {
-    margin-left: -30px;
-    margin-bottom: 40px;
-  }
 }
 .confetti {
   position: absolute;

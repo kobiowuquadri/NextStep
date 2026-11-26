@@ -1,4 +1,4 @@
-import {
+import { WaitlistRequest,
   AiAvailabilityRequest,
   AiAvailabilityResponse,
   AiBreakdownRequest,
@@ -52,6 +52,8 @@ export function buildOpenApi(): Record<string, unknown> {
     add(`/v1/auth/${path}`, 'post', { summary, tags: ['Auth'], requestBody: { required: true, ...json(req) }, responses: { [code]: res ? { description: 'OK', ...json(res) } : { description: 'OK' }, ...errors } });
   }
   add('/v1/auth/logout', 'post', { summary: 'Revoke a refresh token (or all devices)', tags: ['Auth'], security: secured, requestBody: { required: true, ...json(LogoutRequest) }, responses: { '204': { description: 'Signed out' }, ...errors } });
+
+  add('/v1/waitlist', 'post', { summary: 'Join the website waitlist (same answer whether or not the email was already listed)', tags: ['Website'], requestBody: { required: true, ...json(WaitlistRequest) }, responses: { '201': { description: 'Listed' }, ...errors } });
 
   add('/v1/me', 'get', { summary: 'Current user and preferences', tags: ['Account'], security: secured, responses: { '200': { description: 'OK' }, ...errors } });
   add('/v1/me', 'delete', { summary: 'Permanently delete the account and all data', description: 'Body: { password, confirm: "DELETE" }', tags: ['Account'], security: secured, responses: { '204': { description: 'Deleted' }, ...errors } });

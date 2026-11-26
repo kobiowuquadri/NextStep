@@ -87,6 +87,21 @@ describe('authentication', () => {
   });
 });
 
+describe('waitlist', () => {
+  it('adds an email once and answers the same way for repeats', async () => {
+    const email = `Wait-${randomUUID()}@Example.test`;
+    const first = await http().post('/v1/waitlist').send({ email }).expect(201);
+    const again = await http().post('/v1/waitlist').send({ email: email.toLowerCase() }).expect(201);
+    expect(again.body).toEqual(first.body);
+    expect(first.body.message).toMatch(/on the list/);
+  });
+
+  it('needs no account and rejects anything that is not an email', async () => {
+    await http().post('/v1/waitlist').send({ email: 'not-an-email' }).expect(400);
+    await http().post('/v1/waitlist').send({}).expect(400);
+  });
+});
+
 describe('ownership and isolation', () => {
   let a: TestUser;
   let b: TestUser;

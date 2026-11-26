@@ -6,6 +6,8 @@ export const site = {
     'NextStep helps students organise coursework, build realistic study plans and recover when life disrupts them. Built by Team Apex for students balancing study, work, commuting and family.',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || '',
+  /** The NextStep API, used by the waitlist form. Public: it is called from the visitor's browser. */
+  apiUrl: (process.env.NEXT_PUBLIC_API_URL || 'https://nextstep-1nuf.onrender.com').replace(/\/$/, ''),
 };
 
 export const nav = [
